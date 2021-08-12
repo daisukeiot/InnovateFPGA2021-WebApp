@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RootNamespace>InnovateFPGA2021-WebApp</RootNamespace>
+    <RootNamespace>InnovateFPGA2021_WebApp</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
