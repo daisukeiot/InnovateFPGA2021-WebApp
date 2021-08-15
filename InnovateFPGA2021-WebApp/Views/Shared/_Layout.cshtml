@@ -16,6 +16,40 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
 </head>
 <body onload="initialize()">
+    <nav class="navbar navbar-inverse">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand">InnovateFPGA 2021 Azure IoT Demo</a>
+            </div>
+            <button id="btnModalDeviceShow" type="button" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#modal-device">
+                Device Information
+                <span class="glyphicon glyphicon-cloud"></span>
+            </button>
+            <button id="btnModalDpsShow" type="button" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#modal-dps">
+                Device Provisioning
+                <span class="glyphicon glyphicon-cloud"></span>
+            </button>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        Device Provisioning (DPS)<span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Place Holder 1</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">Place Folder 2</a></li>
+                        <li class="divider"></li>
+                        <li>
+                            <button type="button" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#modal-dps">
+                                Device Provisioning
+                                <span class="glyphicon glyphicon-cloud"></span>
+                            </button>
+                        </li>
+                    </ul>
+                <li>
+            </ul>
+        </div>
+    </nav>
     @RenderBody()
     @RenderSection("Scripts", required: false)
 </body>

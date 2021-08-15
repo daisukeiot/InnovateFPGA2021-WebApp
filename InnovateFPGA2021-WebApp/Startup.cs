@@ -28,6 +28,7 @@ namespace InnovateFPGA2021_WebApp
             services.AddControllersWithViews();
             services.Configure<AppSettings>(Configuration.GetSection("Azure"));
             services.AddSignalR(options => options.EnableDetailedErrors = true).AddAzureSignalR(Configuration.GetSection("Azure").GetSection("SignalR").GetValue<string>("ConnectionString"));
+            services.AddSingleton<IIoTHubDps, IoTHubDps>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

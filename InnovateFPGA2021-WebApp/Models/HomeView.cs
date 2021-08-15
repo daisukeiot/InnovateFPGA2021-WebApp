@@ -71,4 +71,24 @@ namespace  InnovateFPGA2021_WebApp.Models
         public string RegistrationId { get; set; }
         public bool isGroup { get; set; }
     }
+
+    public class IOTHUB_DEVICE_DATA
+    {
+        public string deviceId { get; set; }
+        public string connectionState { get; set; }
+        public string status { get; set; }
+        public string authenticationType { get; set; }
+        public string symmetricKey { get; set; }
+        public string deviceConnectionString { get; set; }
+        public string deviceModelId { get; set; }
+        public bool isEdge { get; set; }
+    }
+    public class DPS_ENROLLMENT_DATA
+    {
+        public string registrationId { get; set; }
+        public string symmetricKey { get; set; }
+        public string status { get; set; }
+        public bool isEdge { get; set; }
+        public bool isGroup { get; set; }
+    }
 }
