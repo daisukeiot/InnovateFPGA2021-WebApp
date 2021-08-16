@@ -68,6 +68,23 @@ namespace Portal.Controllers
             }
         }
 
+        // Retrieves a list of IoTHub modules
+        //
+        [HttpGet]
+        public async Task<ActionResult> IoTHubModuleListGet(string deviceId)
+        {
+            try
+            {
+                ViewBag.IoTHubModuleList = await _iothubdpshelper.IoTHubModuleListGet(deviceId);
+                return PartialView("IoTHubModuleListPartialView");
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Exception in RefreshIoTHubDevices() : {e.Message}");
+                return StatusCode(400, new { message = e.Message });
+            }
+        }
+
         // Retrieve the specified Device object.
         // https://docs.microsoft.com/en-us/dotnet/api/microsoft.azure.devices.registrymanager.getdeviceasync?view=azure-dotnet#Microsoft_Azure_Devices_RegistryManager_GetDeviceAsync_System_String
         //

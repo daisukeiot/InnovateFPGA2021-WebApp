@@ -25,6 +25,33 @@ function IoTHubModalClear() {
     $('#deviceConnectionString').html("");
     $('#deviceKey').html("");
     $('#newDeviceId').val("");
+    IoTHubModalModuleClear();
+    DisableButton($('#btnDeleteDevice'), true);
+    DisableButton($('#btnDeviceModelIdCopy'), true);
+    DisableButton($('#btnDeviceConnectionStringCopy'), true);
+    DisableButton($('#btnDeviceKeyCopy'), true);
+}
+
+function DpsModalClear() {
+    $('#dpsEnrollmentType').html("");
+    $('#dpsKey').html("");
+    $('#dpsNewEnrollmentName').val("");
+}
+
+function IoTHubModalModuleClear() {
+    $('#moduleState').html("");
+    $('#moduleModelId').html("");
+}
+
+function IoTHubModuleEnable(bEnable) {
+
+    if (bEnable) {
+        IoTHubModalModuleClear();
+        $('#fieldEdgeModule').show();
+    }
+    else {
+        $('#fieldEdgeModule').hide();
+    }
 }
 
 //
@@ -51,6 +78,39 @@ var IoTHubDeviceListGet = function (selectValue) {
 }
 
 //
+// Gets list of IoT Hub Devices
+//
+var IoTHubModuleListGet = function (deviceId, selectValue) {
+    console.log("Getting Module List");
+    $.ajax({
+        type: "GET",
+        url: '/home/IoTHubModuleListGet',
+        data: {deviceId:deviceId},
+        success: function (response) {
+            $('#iotHubModuleList').empty();
+            $('#iotHubModuleList').append(response);
+            if (selectValue != null) {
+                $('#iotHubModuleList').val(selectValue).change();
+            }
+        },
+        error: function (jqXHR) {
+            alert(" Status: " + jqXHR.status + " " + jqXHR.responseText);
+        }
+    });
+}
+
+function DisableButton(buttonId, bDisable) {
+
+    if (bDisable) {
+        buttonId.prop('disabled', bDisable).addClass('disabled');
+    }
+    else {
+        buttonId.prop('disabled', bDisable).removeClass('disabled');
+    }
+
+}
+
+//
 // Gets device information.  Connection String, Model ID, Primary/Secondary Keys, and connect/disconnect status
 //
 function IoTHubGetDeviceInfo(deviceId, iothubname) {
@@ -72,6 +132,26 @@ function IoTHubGetDeviceInfo(deviceId, iothubname) {
             $('#deviceConnectionString').html("HostName=" + iothubname + ";DeviceId=" + response.deviceId + ";SharedAccessKey=" + response.symmetricKey);
             $('#deviceKey').html(response.symmetricKey);
 
+            var disableButton = true;
+
+            if (response.deviceModelId != null && response.deviceModelId.length > 0) {
+                DisableButton($('#btnDeviceModelIdCopy'), false);
+            }
+            else
+            {
+                DisableButton($('#btnDeviceModelIdCopy'), true);
+            }
+
+            if (response.symmetricKey.length > 0) {
+                DisableButton($('#btnDeviceConnectionStringCopy'), false);
+                DisableButton($('#btnDeviceKeyCopy'), false);
+            }
+            else {
+                DisableButton($('#btnDeviceConnectionStringCopy'), true);
+                DisableButton($('#btnDeviceKeyCopy'), true);
+            }
+
+            //$('#btnDeviceModelIdCopy').prop('disabled', true);
             return true;
         },
         error: function (jqXHR) {
@@ -175,6 +255,13 @@ function DpsEnrollmentGet(enrollmentName) {
 
             $('#dpsEnrollmentType').html(enrollmentTypeString);
             $('#dpsKey').html(response.symmetricKey);
+
+            if (response.symmetricKey != null && response.symmetricKey.length > 0) {
+                DisableButton($('#btnDpsKeyCopy'), false);
+            }
+            else {
+                DisableButton($('#btnDpsKeyCopy'), true);
+            }
             return true;
         },
         error: function (jqXHR) {
@@ -199,6 +286,8 @@ var DpsEnrollmentDelete = function (enrollmentName, isGroup) {
             //DpsEnrollmentListGet(null);
             $("#dpsEnrollmentList").empty();
             $("#dpsEnrollmentList").append(response);
+            DpsModalClear();
+            DisableButton($('#btnDpsEnrollmentDelete'), true);
             return true;
         },
         error: function (jqXHR) {

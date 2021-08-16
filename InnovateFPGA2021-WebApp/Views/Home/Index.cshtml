@@ -30,20 +30,20 @@ Main Page
     </fieldset>
 </div>
 
-<div class="modal fade" id="modal-device" tabindex="-1">
+<div class="modal fade" id="modal-iothub" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title" id="modal-label">Device Information</h4>
+                <h4 class="modal-title" id="modal-label">Device Information : Azure IoT Hub</h4>
             </div>
             <div class="modal-body">
-                <fieldset style="margin-top:1em;max-width:100%">
+                <fieldset>
                     <table style="width:100%;" class="tableModal">
                         <tr class="modalTr" style="background-color:#E7E9EB">
-                            <td class="modalTdIcon">
+                            <td>
                                 <div class="modalToolTip">
                                     <span class="modalTdIcon glyphicon glyphicon-info-sign"></span>
                                     <span class="tooltiptext">Device ID in Azure IoT Hub.</span>
@@ -53,17 +53,17 @@ Main Page
                                 <label class="modalLabel">Device ID</label>
                             </td>
                             <td class="modalTdContents">
-                                <div style="width:100%;font-size:1.1em">
+                                <div style="width:95%;font-size:1.1em">
                                     <select id="iotHubDeviceList" style="width:80%;padding:3px">
                                     </select>
                                 </div>
                             </td>
-                            <td class="modalTdButton">
-                                <button type="button" id="btnDeleteDevice" class="btn btn-primary modalButton"><span class="glyphicon glyphicon-trash"></span>Delete</button>
+                            <td>
+                                <button type="button" id="btnDeleteDevice" class="btn btn-primary modalButton" disabled><span class="modalTdIcon glyphicon glyphicon-trash"></span>Delete</button>
                             </td>
                         </tr>
                         <tr class="modalTr">
-                            <td class="modalTdIcon">
+                            <td>
                                 <div class="modalToolTip">
                                     <span class="modalTdIcon glyphicon glyphicon-info-sign"></span>
                                     <span class="tooltiptext">Status of device connection.  Device is either online (Connected) or offline (Disconnected).</span>
@@ -77,15 +77,15 @@ Main Page
                                     &nbsp;
                                 </div>
                             </td>
-                            <td class="modalTdButton">
-                                <button type="button" id="btnDeviceConnectionRefresh" class="btn btn-primary modalButton">Refresh</button>
+                            <td>
+                                <button type="button" id="btnDeviceConnectionRefresh" class="btn btn-primary modalButton"><span class="modalTdIcon glyphicon glyphicon-refresh"></span>Refresh</button>
                             </td>
                         </tr>
 
                         <tr class="modalTr" style="background-color:#e7e9eb">
-                            <td class="modalTdIcon">
+                            <td>
                                 <div class="modalToolTip">
-                                    <span class="glyphicon glyphicon-info-sign"></span>
+                                    <span class="modalTdIcon glyphicon glyphicon-info-sign"></span>
                                     <span class="tooltiptext">IoT Plug and Play Digital Twin Model ID (DTMI).</span>
                                 </div>
                             </td>
@@ -97,15 +97,15 @@ Main Page
                                     &nbsp;
                                 </div>
                             </td>
-                            <td class="modalTdButton">
-                                <button type="button" id="btnDeviceModelIdCopy" class="btn btn-primary modalButton">Copy</button>
+                            <td>
+                                <button type="button" id="btnDeviceModelIdCopy" class="btn btn-primary modalButton"  disabled><span class="modalTdIcon glyphicon glyphicon-copy"></span>Copy</button>
                             </td>
                         </tr>
 
                         <tr class="modalTr">
-                            <td class="modalTdIcon">
+                            <td>
                                 <div class="modalToolTip">
-                                    <span class="glyphicon glyphicon-copy"></span>
+                                    <span class="modalTdIcon glyphicon glyphicon-copy"></span>
                                     <span class="tooltiptext">Device Connection String to be used to connect device to Azure IoT Hub</span>
                                 </div>
                             </td>
@@ -117,15 +117,15 @@ Main Page
                                     &nbsp;
                                 </div>
                             </td>
-                            <td class="modalTdButton">
-                                <button type="button" id="btnDeviceConnectionStringCopy" class="btn btn-primary modalButton">Copy</button>
+                            <td>
+                                <button type="button" id="btnDeviceConnectionStringCopy" class="btn btn-primary modalButton"  disabled><span class="modalTdIcon glyphicon glyphicon-copy"></span>Copy</button>
                             </td>
                         </tr>
 
                         <tr class="modalTr" style="background-color:#E7E9EB">
-                            <td class="modalTdIcon">
+                            <td>
                                 <div class="modalToolTip">
-                                    <span class="glyphicon glyphicon-copy"></span>
+                                    <span class="modalTdIcon glyphicon glyphicon-copy"></span>
                                     <span class="tooltiptext">A key used to authenticate device with IoT Hub.</span>
                                 </div>
                             </td>
@@ -137,20 +137,85 @@ Main Page
                                     &nbsp;
                                 </div>
                             </td>
-                            <td class="modalTdButton">
-                                <button type="button" id="btnDeviceKeyCopy" class="btn btn-primary modalButton">Copy</button>
+                            <td>
+                                <button type="button" id="btnDeviceKeyCopy" class="btn btn-primary modalButton" disabled><span class="modalTdIcon glyphicon glyphicon-copy"></span>Copy</button>
                             </td>
                         </tr>
                     </table>
                 </fieldset>
-                <fieldset style="margin-top:1em">
+
+                <fieldset id="fieldEdgeModule" hidden>
+                    <table style="width:100%;" class="tableModal">
+                        <tr class="modalTr" style="background-color:#E7E9EB">
+                            <td>
+                                <div class="modalToolTip">
+                                    <span class="modalTdIcon glyphicon glyphicon-info-sign"></span>
+                                    <span class="tooltiptext">Module ID of Azure IoT Edge.</span>
+                                </div>
+                            </td>
+                            <td class="modalTdLabel">
+                                <label class="modalLabel">Module ID</label>
+                            </td>
+                            <td class="modalTdContents">
+                                <div style="width:100%;font-size:1.1em">
+                                    <select id="iotHubModuleList" style="width:80%;padding:3px">
+                                    </select>
+                                </div>
+                            </td>
+                            <td class="modalTdButton">
+                                <button type="button" id="btnDeleteModule" class="btn btn-primary modalButton" style="visibility:hidden"></button>
+                            </td>
+                        </tr>
+                        <tr class="modalTr">
+                            <td>
+                                <div class="modalToolTip">
+                                    <span class="modalTdIcon glyphicon glyphicon-info-sign"></span>
+                                    <span class="tooltiptext">Status of Azure IoT Edge module.  The Module is either online (Connected) or offline (Disconnected).</span>
+                                </div>
+                            </td>
+                            <td class="modalTdLabel">
+                                <label class="modalLabel">Module State</label>
+                            </td>
+                            <td class="modalTdContents">
+                                <div id="moduleState">
+                                    &nbsp;
+                                </div>
+                            </td>
+                            <td class="modalTdButton">
+                                <button type="button" id="btnModuleConnectionRefresh" class="btn btn-primary modalButton"><span class="modalTdIcon glyphicon glyphicon-refresh"></span>Refresh</button>
+                            </td>
+                        </tr>
+
+                        <tr class="modalTr" style="background-color:#e7e9eb">
+                            <td>
+                                <div class="modalToolTip">
+                                    <span class="modalTdIcon glyphicon glyphicon-info-sign"></span>
+                                    <span class="tooltiptext">IoT Plug and Play Digital Twin Model ID (DTMI).</span>
+                                </div>
+                            </td>
+                            <td class="modalTdLabel">
+                                <label class="modalLabel">Module Model ID</label>
+                            </td>
+                            <td class="modalTdContents">
+                                <div id="moduleModelId" style="width:inherit;overflow-x:hidden; white-space:nowrap;">
+                                    &nbsp;
+                                </div>
+                            </td>
+                            <td class="modalTdButton">
+                                <button type="button" id="btnDeviceModelIdCopy" class="btn btn-primary modalButton" disabled><span class="modalTdIcon glyphicon glyphicon-copy"></span>Copy</button>
+                            </td>
+                        </tr>
+
+                    </table>
+                </fieldset>
+                <fieldset>
                     <table style="width:100%">
                         <tr data-toggle="collapse" data-target="#new-deviceid" class="accordian-toggle" style="width:100%">
                             <td style="text-align:center">
                                 <button type="button" id="btnIoTHubNewDevice" class="btn btn-secondary modalButton" style="width:100%">
-                                    <span class="glyphicon glyphicon-chevron-down"></span>
+                                    <span class="modalTdIcon glyphicon glyphicon-chevron-down"></span>
                                     Add new Device ID
-                                    <span class="glyphicon glyphicon-chevron-down"></span>
+                                    <span class="modalTdIcon glyphicon glyphicon-chevron-down"></span>
                                 </button>
                             </td>
                         </tr>
@@ -158,17 +223,17 @@ Main Page
                             <td style="white-space:nowrap">
                                 <div class="accordian-body" style="margin-top:1em">
                                     <table width="100%">
-                                        <tr class="modalTr">
-                                            <td style="min-width: 11.5em">
-                                                New Device ID :
+                                        <tr class="modalTr" style="background-color:#E7E9EB">
+                                            <td class="modalTdAddLabel">
+                                                New Device ID
                                             </td>
                                             <td style="width:99%">
                                                 <input type="text" id="newDeviceId" style="width: 80%" />
                                             </td>
                                         </tr>
                                         <tr class="modalTr">
-                                            <td>
-                                                Capability :
+                                            <td class="modalTdAddLabel">
+                                                Capability
                                             </td>
                                             <td>
                                                 <label class="modalLabel switch">
@@ -182,7 +247,7 @@ Main Page
                                         </tr>
                                     </table>
                                 </div>
-                                <button type="button" id="btnNewDeviceIdCreate" class="btn btn-primary modalButton">Create</button>
+                                <button type="button" id="btnNewDeviceIdCreate" class="btn btn-primary modalButton"  disabled>Create</button>
                             </td>
                         </tr>
                     </table>
@@ -202,42 +267,40 @@ Main Page
                 <button type="button" class="close" data-dismiss="modal">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title" id="modal-label">Device Information</h4>
+                <h4 class="modal-title" id="modal-label">Device Provisioning : DPS</h4>
             </div>
             <div class="modal-body">
-                <fieldset style="margin-top:1em;max-width:100%">
-                    <table style="width:100%;">
-
-                        <tr class="modalTr" style="background-color:#E7E9EB">>
-                            <td class="modalTdIcon">
+                <fieldset>
+                    <table style="width:100%;" class="tableModal">
+                        <tr class="modalTr" style="background-color:#E7E9EB">
+                            <td>
                                 <div class="modalToolTip">
                                     <span class="modalTdIcon glyphicon glyphicon-info-sign"></span>
-                                    <span class="tooltiptext">Status of device connection.  Device is either online (Connected) or offline (Disconnected).</span>
+                                    <span class="tooltiptext">List of DPS device enrollments.</span>
                                 </div>
                             </td>
-                            <td style="min-width:10em">
+                            <td class="modalTdLabel">
                                 <label class="modalLabel">Enrollment</label>
                             </td>
-                            <td style="width:100%">
+                            <td class="modalTdContents">
                                 <div style="width:95%;font-size:1.1em">
                                     <select id="dpsEnrollmentList" style="width:inherit;padding:3px">
                                     </select>
                                 </div>
                             </td>
                             <td>
-                                <button type="button" id="btnDpsEnrollmentDelete" class="btn btn-primary modalButton"><span class="glyphicon glyphicon-trash"></span>Delete</button>
+                                <button type="button" id="btnDpsEnrollmentDelete" class="btn btn-primary modalButton"  disabled><span class="modalTdIcon glyphicon glyphicon-trash"></span>Delete</button>
                             </td>
                         </tr>
 
-
                         <tr class="modalTr">
-                            <td class="modalTdIcon">
+                            <td>
                                 <div class="modalToolTip">
                                     <span class="modalTdIcon glyphicon glyphicon-info-sign"></span>
                                     <span class="tooltiptext">Type of DPS Enrollmnet.  Either Group or Individual</span>
                                 </div>
                             </td>
-                            <td>
+                            <td class="modalTdLabel">
                                 <label class="modalLabel">Enrollment Type</label>
                             </td>
                             <td>
@@ -246,18 +309,18 @@ Main Page
                                 </div>
                             </td>
                             <td>
-                                <button type="button" class="btn btn-primary modalButton" disabled>Dummy</button>
+                                <button type="button" class="btn btn-primary modalButton" style="visibility:hidden" disabled>Dummy</button>
                             </td>
                         </tr>
 
-                        <tr class="modalTr" style="background-color:#E7E9EB">>
-                            <td class="modalTdIcon">
+                        <tr class="modalTr" style="background-color:#E7E9EB">
+                            <td>
                                 <div class="modalToolTip">
-                                    <span class="glyphicon glyphicon-copy"></span>
+                                    <span class="modalTdIcon glyphicon glyphicon-copy"></span>
                                     <span class="tooltiptext">ID Scope of DPS</span>
                                 </div>
                             </td>
-                            <td style="width: 10em">
+                            <td class="modalTdLabel">
                                 <label class="modalLabel">ID Scope</label>
                             </td>
                             <td>
@@ -266,18 +329,18 @@ Main Page
                                 </div>
                             </td>
                             <td>
-                                <button type="button" id="btnDpsIdScopeCopy" class="btn btn-primary modalButton">Copy</button>
+                                <button type="button" id="btnDpsIdScopeCopy" class="btn btn-primary modalButton"  disabled><span class="modalTdIcon glyphicon glyphicon-copy"></span>Copy</button>
                             </td>
                         </tr>
 
                         <tr class="modalTr">
-                            <td class="modalTdIcon">
+                            <td>
                                 <div class="modalToolTip">
-                                    <span class="glyphicon glyphicon-copy"></span>
+                                    <span class="modalTdIcon glyphicon glyphicon-copy"></span>
                                     <span class="tooltiptext">Copy primary key used to authenticate device with DPS.</span>
                                 </div>
                             </td>
-                            <td>
+                            <td class="modalTdLabel">
                                 <label class="modalLabel">Symmetric Key</label>
 
                             </td>
@@ -287,19 +350,19 @@ Main Page
                                 </div>
                             </td>
                             <td>
-                                <button type="button" id="btnDpsKeyCopy" class="btn btn-primary modalButton">Copy</button>
+                                <button type="button" id="btnDpsKeyCopy" class="btn btn-primary modalButton"  disabled><span class="modalTdIcon glyphicon glyphicon-copy"></span>Copy</button>
                             </td>
                         </tr>
                     </table>
                 </fieldset>
                 <fieldset>
                     <table style="width:100%">
-                        <tr data-toggle="collapse" data-target="#new-enrollment" class="accordian-toggle" style="width:100%">
+                        <tr data-toggle="collapse" id="new-enrollmentAdd" data-target="#new-enrollment" class="accordian-toggle" style="width:100%">
                             <td style="text-align:center">
                                 <button type="button" id="btnDpsAddEnrollment" class="btn btn-secondary modalButton" style="width:100%">
-                                    <span class="glyphicon glyphicon-chevron-down"></span>
+                                    <span class="modalTdIcon glyphicon glyphicon-chevron-down"></span>
                                     Add New Enrollment
-                                    <span class="glyphicon glyphicon-chevron-down"></span>
+                                    <span class="modalTdIcon glyphicon glyphicon-chevron-down"></span>
                                 </button>
                             </td>
                         </tr>
@@ -307,36 +370,39 @@ Main Page
                             <td style="white-space: nowrap">
                                 <div class="accordian-body" style="margin-top:1em">
                                     <table width="100%">
-                                        <tr class="modalTr">
-                                            <td style="min-width: 11.5em">
-                                                Enrollment Name :
+                                        <tr class="modalTr" style="background-color:#E7E9EB">
+                                            <td class="modalTdAddLabel">
+                                                Enrollment Name
                                             </td>
                                             <td style="width: 99%">
                                                 <input type="text" id="dpsNewEnrollmentName" style="width: 80%" />
                                             </td>
                                         </tr>
-                                        <tr class="modalTr" style="background-color:#E7E9EB">
-                                            <td>
-                                                Enrollment Type :
+                                        <tr class="modalTr">
+                                            <td class="modalTdAddLabel">
+                                                Enrollment Type
                                             </td>
                                             <td>
                                                 <div id="dpsNewEnrollmentType">
                                                     <label class="modalLabel">
-                                                        Individual
-                                                        <input type="radio" value="individual" checked="checked" name="newEnrollmentTypeRadio">
-                                                        <span class="checkmark"></span>
+                                                        <input type="radio" class="blue" value="individual" checked="checked" name="newEnrollmentTypeRadio" id="radioDpsIndividual">
                                                     </label>
+                                                    <label class="modalLabel" for="radioDpsIndividual">
+                                                        Individual
+                                                    </label>
+
                                                     <label class="modalLabel">
+                                                        <input type="radio" class="blue" value="group" name="newEnrollmentTypeRadio" id="radioDpsGroup">
+                                                    </label>
+                                                    <label class="modalLabel" for="radioDpsGroup">
                                                         Group
-                                                        <input type="radio" value="group" name="newEnrollmentTypeRadio">
-                                                        <span class="checkmark"></span>
                                                     </label>
                                                 </div>
                                             </td>
                                         </tr>
-                                        <tr class="modalTr">
-                                            <td>
-                                                Capability :
+                                        <tr class="modalTr" style="background-color:#E7E9EB">
+                                            <td class="modalTdAddLabel">
+                                                Capability
                                             </td>
                                             <td>
                                                 <label class="modalLabel switch">
@@ -352,7 +418,7 @@ Main Page
 
                                     </table>
                                 </div>
-                                <button type="button" id="btnDpsNewEnrollmentCreate" class="btn btn-primary modalButton">Create</button>
+                                <button type="button" id="btnDpsNewEnrollmentCreate" class="btn btn-primary modalButton"  disabled>Create</button>
                             </td>
                         </tr>
                     </table>
@@ -521,13 +587,75 @@ Script block to update Telemetry/Events grid
         //
         // User selected a device
         //
-        $('#iotHubDeviceList').change(function () {
-            var selectedItem = $('#iotHubDeviceList option:selected').text().trim();
-            if (selectedItem.length > 0) {
-                console.log("device selected " + selectedItem);
-                IoTHubGetDeviceInfo(selectedItem, "@ViewData["IoTHubName"]");
+        $('#iotHubDeviceList').change(function (e) {
+            var selectedItem = $('#iotHubDeviceList option:selected')
+
+            if (selectedItem != null) {
+                var deviceId = selectedItem.text().trim();
+                console.log("device selected " + deviceId);
+                IoTHubGetDeviceInfo(deviceId, "@ViewData["IoTHubName"]");
+
+                if (selectedItem.attr('data-isEdge') == "True") {
+                    IoTHubModuleEnable(true);
+                    IoTHubModuleListGet(deviceId, null);
+                }
+                else {
+                    IoTHubModuleEnable(false);
+                }
+
+                DisableButton($('#btnDeleteDevice'), false);
+            }
+            else {
+                DisableButton($('#btnDeleteDevice'), true);
             }
         });
+
+        //
+        // User selected a module
+        //
+        $('#iotHubModuleList').change(function (e) {
+            var selectedItem = $('#iotHubModuleList option:selected')
+
+            if (selectedItem != null) {
+                var moduleId = selectedItem.text().trim();
+                console.log("module selected " + moduleId);
+
+                $('#moduleState').html(selectedItem.attr('data-Status'))
+                $('#moduleModelId').html(selectedItem.attr('data-ModelId'))
+            }
+            else {
+                IoTHubModalClear();
+            }
+        });
+
+        //
+        // User entered new device id
+        //
+        $('#newDeviceId').change(function (e) {
+            var newDevice = $('#newDeviceId').val().trim();
+            if (newDevice.length > 0) {
+                DisableButton($('#btnNewDeviceIdCreate'), false);
+            }
+            else {
+                $('#newDeviceId').val("");
+                DisableButton($('#btnNewDeviceIdCreate'), true);
+            }
+        });
+
+        //
+        // User entered new enrollment name
+        //
+        $('#dpsNewEnrollmentName').change(function (e) {
+            var newEnrollment = $('#dpsNewEnrollmentName').val().trim();
+            if (newEnrollment.length > 0) {
+                DisableButton($('#btnDpsNewEnrollmentCreate'), false);
+            }
+            else {
+                $('#dpsNewEnrollmentName').val("");
+                DisableButton($('#btnDpsNewEnrollmentCreate'), true);
+            }
+        });
+
 
         //
         // User selected an enrollment
@@ -537,6 +665,11 @@ Script block to update Telemetry/Events grid
             if (selectedItem.length > 0) {
                 console.log("Enrollment selected " + selectedItem);
                 DpsEnrollmentGet(selectedItem, "@ViewData["IoTHubName"]");
+
+                DisableButton($('#btnDpsEnrollmentDelete'), false);
+            }
+            else {
+                DisableButton($('#btnDpsEnrollmentDelete'), true);
             }
         });
 
@@ -545,9 +678,9 @@ Script block to update Telemetry/Events grid
         //
 
         // Modal Dialog
-        $('#btnModalDeviceShow').click(function (e) {
+        $('#btnModalIoTHubShow').click(function (e) {
             console.log("Button " + e.target.id + " Click");
-            IoTHubModalClear();
+            //IoTHubModalClear();
             IoTHubDeviceListGet(null);
         });
 
@@ -644,6 +777,29 @@ Script block to update Telemetry/Events grid
 
         $(document).ready(function () {
             console.log("Ready");
+
+            $('#modal-dps').on('show.bs.modal', function () {
+                console.log("Debug : Show DPS Modal");
+                if ($('#dpsIdScope').html().length > 0) {
+                    DisableButton($('#btnDpsIdScopeCopy'), false);
+                }
+            });
+
+            $('#modal-dps').on('hidden.bs.modal', function () {
+                DpsModalClear();
+                $("#new-enrollment").collapse('hide');
+            });
+
+            $("#modal-iothub").on('show.bs.modal', function () {
+                console.log("Debug : Show IoT Hub Modal");
+            });
+
+            $("#modal-iothub").on('hidden.bs.modal', function () {
+                IoTHubModalClear();
+                $("#new-deviceid").collapse('hide');
+                $('#fieldEdgeModule').hide();
+            });
+
         });
     </script>
 }

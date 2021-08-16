@@ -17,6 +17,7 @@ namespace InnovateFPGA2021_WebApp.Helper
 	{
 		string IoTHubHubNameGet(string deviceConnectionString);
 		Task<IoTHubDeviceListViewModel> IoTHubDeviceListGet();
+		Task<IoTHubModuleListViewModel> IoTHubModuleListGet(string deviceId);
 		Task<Device> IoTHubDeviceGet(string deviceId);
 		Task<Twin> IoTHubDeviceTwinGet(string deviceId);
 		Task<bool> IoTHubDeviceDelete(string deviceId);
@@ -108,6 +109,43 @@ namespace InnovateFPGA2021_WebApp.Helper
 		}
 
 		/**********************************************************************************
+		 * Gets IoT Edge Modules
+		 *********************************************************************************/
+		public async Task<IoTHubModuleListViewModel> IoTHubModuleListGet(string deviceId)
+		{
+			var iothubModuleListViewModel = new IoTHubModuleListViewModel();
+
+			try
+			{
+				IEnumerable<Module> modules;
+				_logger.LogDebug($"Retrieving Modules for {deviceId}");
+				modules = await _registryManager.GetModulesOnDeviceAsync(deviceId);
+
+				foreach (var module in modules)
+				{
+					_logger.LogInformation($"Found a module : {module.Id}");
+
+					var moduleTwin = await IoTHubModuleTwinGet(deviceId, module.Id).ConfigureAwait(false);
+
+					var modelId = string.IsNullOrEmpty(moduleTwin.ModelId) ? "No Model ID" : moduleTwin.ModelId;
+
+					iothubModuleListViewModel.Modules.Add(new IoTHubModuleViewModel
+					{
+						ModuleId = module.Id,
+						ModelId = modelId,
+						Status = module.ConnectionState.ToString(),
+					});
+				}
+			}
+			catch (Exception e)
+			{
+				_logger.LogError($"Exception in GetModulesOnDeviceAsync() : {e.Message}");
+				throw e;
+			}
+			return iothubModuleListViewModel;
+		}
+
+		/**********************************************************************************
 		 * Gets Twin from IoT Hub
 		 *********************************************************************************/
 		public async Task<Twin> IoTHubDeviceTwinGet(string deviceId)
@@ -118,6 +156,26 @@ namespace InnovateFPGA2021_WebApp.Helper
 			{
 				_logger.LogDebug($"Retrieving Twin for {deviceId}");
 				twin = await _registryManager.GetTwinAsync(deviceId);
+			}
+			catch (Exception e)
+			{
+				_logger.LogError($"Exception in IoTHubDeviceTwinGet() : {e.Message}");
+				throw e;
+			}
+			return twin;
+		}
+
+		/**********************************************************************************
+		 * Gets Twin from IoT Hub
+		 *********************************************************************************/
+		private async Task<Twin> IoTHubModuleTwinGet(string deviceId, string moduleId)
+		{
+			Twin twin = null;
+
+			try
+			{
+				_logger.LogDebug($"Retrieving Twin for {moduleId}");
+				twin = await _registryManager.GetTwinAsync(deviceId, moduleId);
 			}
 			catch (Exception e)
 			{

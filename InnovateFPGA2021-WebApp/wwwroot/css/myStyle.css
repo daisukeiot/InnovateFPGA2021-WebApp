@@ -78,15 +78,17 @@ div#main_contents {
 
 
 fieldset {
-    border-width: 2px;
+    border-width: 1px;
     color: rgb(40, 40, 40);
     border-color: silver;
     border-style: groove;
-    padding: 3px 5px 3px 5px;
-    margin: 0px 5px 5px 5px;
-    width: auto;
+    padding: 10px;
+    margin: 0px;
+    width: 100%;
     height: auto;
     border-radius: 6px;
+    overflow-x: auto;
+    margin-bottom:5px;
 }
 
 legend, legend.inner {
@@ -145,20 +147,8 @@ td:before {
     content: '';
     display: block;
     width: 1em;
+    min-height:0.1em;
 }
-
-/*td:nth-child(1) {
-    min-width: 1.5em;
-}*/
-
-/*td:nth-child(2) {
-    min-width: 10em%;
-}*/
-
-/*td:nth-child(3) {
-    min-width: 80%;
-}
-*/
 
 i {
     padding-right: 0.3em;
@@ -223,6 +213,7 @@ Tooltip
     padding-right: 0.5em;
     margin: 1px 0 1px 0;
     vertical-align: middle;
+    white-space: nowrap;
 }
 
 .modalTr {
@@ -241,30 +232,39 @@ Tooltip
 
 .modalTdIcon {
     width: 1.5em;
+    margin-left: 0.5em;
 }
 
 .modalTdLabel {
-    width: 20%;
+    min-width: 9em;
 }
 
 .modalTdContents {
     max-width: 20em;
+    width:100%;
 }
 
 .modalTdButton {
     width: 20%;
 }
 
+.modalTdAddLabel {
+    padding-left: 0.6em;
+    min-width: 11em;
+    white-space: nowrap
+}
+
 .glyphicon {
-    padding-right: 0.5em
+    padding-right: 0.5em;
 }
 
 .switch {
     position: relative;
     display: inline-block;
-    width: 3em;
-    height: 1.6em;
+    width: 2.6em;
+    height: 1.3em;
     float:left;
+    margin-right:0.5em;
 }
 
     .switch input {
@@ -289,8 +289,8 @@ Tooltip
     .slider:before {
         position: absolute;
         content: "";
-        height: 1.1em;
-        width: 1.1em;
+        height: 0.8em;
+        width: 0.8em;
         left: 4px;
         bottom: 4px;
         background-color: white;
@@ -307,16 +307,69 @@ input:focus + .slider {
 }
 
 input:checked + .slider:before {
-    -webkit-transform: translateX(1.1em);
-    -ms-transform: translateX(1.1em);
-    transform: translateX(1.1em);
+    -webkit-transform: translateX(1.0em);
+    -ms-transform: translateX(1.0em);
+    transform: translateX(1.0em);
 }
 
 /* Rounded sliders */
 .slider.round {
-    border-radius: 1em;
+    border-radius: 0.8em;
 }
 
 .slider.round:before {
     border-radius: 50%;
 }
+
+input[type=radio] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    -o-appearance: none;
+    appearance: none;
+    position: relative;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    vertical-align: -0.6rem;
+    transition: all .15s ease-out 0s;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    margin: 0;
+    outline: none;
+    border-radius: 10%;
+}
+
+    input[type=radio].blue
+    {
+        border-radius: 50%;
+        outline:0;
+    }
+
+    input[type=radio]:checked:before {
+        transform: scale(1);
+    }
+
+    input[type=radio]:before {
+        content: "";
+        display: block;
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        transform: scale(0);
+        transition: all ease-out 250ms;
+    }
+
+    input[type=radio].blue {
+        border: 2px solid #aaa;
+    }
+
+        input[type=radio].blue:checked:before {
+            background: #2196F3;
+            border: 0;
+            margin-top: 0.5px;
+            margin-left:0.5px;
+        }

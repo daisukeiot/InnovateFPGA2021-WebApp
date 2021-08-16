@@ -17,37 +17,38 @@
 </head>
 <body onload="initialize()">
     <nav class="navbar navbar-inverse">
-        <div class="container">
-            <div class="navbar-header">
-                <a class="navbar-brand">InnovateFPGA 2021 Azure IoT Demo</a>
+        <div class="container" style="width:100%">
+            <div class="navbar-header" style="float:none">
+                <ul class="nav navbar-nav navbar-left">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Device Management&nbsp;<span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu pull-left">
+                            <li>
+                                <button id="btnModalDpsShow" type="button" style="border:0;text-align:left" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#modal-dps">
+                                    <img src="./images/DPS.png" style="width:1.1em; margin-right:0.5em" />Device Provisioning (DPS)
+                                </button>
+                            </li>
+                            <li>
+                                <button id="btnModalIoTHubShow" type="button" style="border: 0; text-align: left" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#modal-iothub">
+                                    <img src="./images/IoTHub.png" style="width:1.1em; margin-right:0.5em" />Device Information (IoT Hub)
+                                </button>
+                            </li>
+                            <li class="divider"></li>
+                        </ul>
+                    <li>
+                </ul>
+                <a class="navbar-brand" style="float:right">InnovateFPGA 2021 Azure IoT Demo</a>
             </div>
-            <button id="btnModalDeviceShow" type="button" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#modal-device">
-                Device Information
-                <span class="glyphicon glyphicon-cloud"></span>
-            </button>
-            <button id="btnModalDpsShow" type="button" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#modal-dps">
-                Device Provisioning
-                <span class="glyphicon glyphicon-cloud"></span>
-            </button>
-            <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        Device Provisioning (DPS)<span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">Place Holder 1</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#">Place Folder 2</a></li>
-                        <li class="divider"></li>
-                        <li>
-                            <button type="button" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#modal-dps">
-                                Device Provisioning
-                                <span class="glyphicon glyphicon-cloud"></span>
-                            </button>
-                        </li>
-                    </ul>
-                <li>
-            </ul>
+            @*<button id="btnModalDeviceShow" type="button" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#modal-iothub">
+            Device Information
+            <span class="glyphicon glyphicon-cloud"></span>
+        </button>
+        <button id="btnModalDpsShow" type="button" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#modal-dps">
+            Device Provisioning
+            <span class="glyphicon glyphicon-cloud"></span>
+        </button>*@
         </div>
     </nav>
     @RenderBody()

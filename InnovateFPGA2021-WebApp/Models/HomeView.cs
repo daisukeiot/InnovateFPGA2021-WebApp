@@ -40,6 +40,26 @@ namespace  InnovateFPGA2021_WebApp.Models
         public string Status {get;set;}
     }
 
+    public class IoTHubModuleListViewModel
+    {
+        public IoTHubModuleListViewModel()
+        {
+            Modules = new List<IoTHubModuleViewModel>();
+        }
+
+        [Display(Name = "IoT Hub Module List")]
+        [Required]
+        public string SelectedIoTHubModule { get; set; }
+        public IList<IoTHubModuleViewModel> Modules { get; set; }
+    }
+
+    public class IoTHubModuleViewModel
+    {
+        public string ModuleId { get; set; }
+        public string ModelId { get; set; }
+        public string Status { get; set; }
+    }
+
     public class DpsEnrollmentListViewModel
     {
         public DpsEnrollmentListViewModel()
