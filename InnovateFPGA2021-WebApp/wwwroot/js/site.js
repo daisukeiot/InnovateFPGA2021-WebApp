@@ -34,7 +34,7 @@ function IoTHubModalClear() {
     DisableButton($('#btnDeviceConnectionStringCopy'), true);
     DisableButton($('#btnDeviceKeyCopy'), true);
     DisableButton($('#btnDeviceTwin'), true);
-    $('#btnDeviceTwin').val("Display");
+    $('#btnDeviceTwin').val("Show");
 }
 
 function DpsModalClear() {
