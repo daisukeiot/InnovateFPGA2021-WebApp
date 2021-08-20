@@ -590,6 +590,11 @@ Script block to update Telemetry/Events grid
 
             if (selectedItem != null) {
                 var deviceId = selectedItem.text().trim();
+
+                if (deviceId.length == 0) {
+                    IoTHubModalClear();
+                    return;
+                }
                 console.log("device selected " + deviceId);
                 IoTHubGetDeviceInfo(deviceId, "@ViewData["IoTHubName"]");
 
@@ -616,6 +621,11 @@ Script block to update Telemetry/Events grid
 
             if (selectedItem != null) {
                 var moduleId = selectedItem.text().trim();
+
+                if (moduleId.length == 0) {
+                    IoTHubModalClear();
+                    return;
+                }
                 console.log("module selected " + moduleId);
 
                 $('#moduleState').html(selectedItem.attr('data-Status'))
@@ -659,10 +669,19 @@ Script block to update Telemetry/Events grid
         // User selected an enrollment
         //
         $('#dpsEnrollmentList').change(function () {
-            var selectedItem = $('#dpsEnrollmentList option:selected').text().trim();
-            if (selectedItem.length > 0) {
-                console.log("Enrollment selected " + selectedItem);
-                DpsEnrollmentGet(selectedItem, "@ViewData["IoTHubName"]");
+
+            var selectedItem = $('#dpsEnrollmentList option:selected');
+
+            if (selectedItem != null) {
+
+                var enrollmentId = selectedItem.text().trim();
+                if (enrollmentId.length == 0) {
+                    DpsModalClear();
+                    return;
+                }
+
+                console.log("Enrollment selected " + enrollmentId);
+                DpsEnrollmentGet(enrollmentId, "@ViewData["IoTHubName"]");
 
                 DisableButton($('#btnDpsEnrollmentDelete'), false);
             }
