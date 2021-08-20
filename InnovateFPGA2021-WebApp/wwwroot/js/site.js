@@ -137,7 +137,7 @@ function IoTHubGetDeviceInfo(deviceId, iothubname) {
             $('#deviceConnectionString').html("HostName=" + iothubname + ";DeviceId=" + response.deviceId + ";SharedAccessKey=" + response.symmetricKey);
             $('#deviceKey').html(response.symmetricKey);
 
-            var disableButton = true;
+            DisableButton($('#btnDeviceTwin'), false);
 
             if (response.deviceModelId != null && response.deviceModelId.length > 0) {
                 DisableButton($('#btnDeviceModelIdCopy'), false);
@@ -150,12 +150,10 @@ function IoTHubGetDeviceInfo(deviceId, iothubname) {
             if (response.symmetricKey.length > 0) {
                 DisableButton($('#btnDeviceConnectionStringCopy'), false);
                 DisableButton($('#btnDeviceKeyCopy'), false);
-                DisableButton($('#btnDeviceTwin'), false);
             }
             else {
                 DisableButton($('#btnDeviceConnectionStringCopy'), true);
                 DisableButton($('#btnDeviceKeyCopy'), true);
-                DisableButton($('#btnDeviceTwin'), true);
             }
 
             //$('#btnDeviceModelIdCopy').prop('disabled', true);
