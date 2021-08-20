@@ -175,6 +175,32 @@ i {
     padding: 0px;
 }
 
+.eventTableButton {
+    border: none;
+    background-color: #3193dc;
+    border: 1px solid transparent;
+    padding: 1px 3px 1px 6px;
+    color:white;
+    margin:0;
+    line-height:1.3;
+    font-size:0.9em;
+    vertical-align:baseline;
+}
+
+    .eventTableButton:hover {
+        text-decoration: none;
+        background-color: #185f92;
+    }
+
+    .eventTableButton:focus {
+        outline: 0;
+    }
+
+    .eventTableButton:active .modalButton:focus .modalButton:active:focus .modalButton:visited {
+        outline: 0;
+        background-color: #86c6f5;
+    }
+
 /*============================================================
 Tooltip
 ============================================================*/
@@ -252,6 +278,7 @@ Tooltip
     float: right;
     background-color: #3193dc;
     border:none;
+    height: 2em;
 }
     .modalButton:focus {
         outline: 0;
@@ -276,6 +303,9 @@ Tooltip
         background-color: #86c6f5;
     }
 
+.eventFasNoMargin {
+    margin:0;
+}
 .modalTdIcon {
     width: 1.5em;
     margin-left: 0.5em;

@@ -14,7 +14,7 @@ Main Page
     <fieldset>
         <legend><strong>Device Telemetry and Events</strong></legend>
         <div class="EventSection">
-            <button type="button" id="clear-events"><i class="far fa-trash-alt"></i>Clear Events</button>
+            <button type="button" class="modalButton" style="float:left" id="btnClearEvents"><i class="far fa-trash-alt"></i>Clear Events</button>
             <table id="device-events" class="table table-striped" style="max-height: 50vh;overflow: auto">
                 <thead>
                 <th>&nbsp;</th>
@@ -440,8 +440,8 @@ Script block to update Telemetry/Events grid
 <script id="event-template-telemetry" type="text/x-handlebars-template">
     <tr data-toggle="collapse" data-target="#event-{{eventId}}" class="accordian-toggle">
         <td>
-            <button class="btn btn-primary btn-xs">
-                <i class="fas fa-angle-double-down" onclick="toggleEvent(this)" data-targetId="#event-{{eventId}}"></i>
+            <button class="eventTableButton">
+                <i class="fas fa-angle-double-down eventFasNoMargin" onclick="toggleEvent(this)" data-targetId="#event-{{eventId}}"></i>
             </button>
         </td>
         <td>{{eventTime}}</td>
@@ -462,14 +462,14 @@ Script block to update Telemetry/Events grid
 <script id="event-template-eventGrid" type="text/x-handlebars-template">
     <tr data-toggle="collapse" data-target="#event-{{eventId}}" class="accordian-toggle">
         <td>
-            <button class="btn btn-primary btn-xs">
-                <i class="fas fa-angle-double-down" onclick="toggleEvent(this)" data-targetId="#event-{{eventId}}"></i>
+            <button class="eventTableButton">
+                <i class="fas fa-angle-double-down eventFasNoMargin" onclick="toggleEvent(this)" data-targetId="#event-{{eventId}}"></i>
             </button>
         </td>
         <td>{{eventTime}}</td>
         <td>{{eventDeviceId}}</td>
         <td>{{eventModelId}}</td>
-        <td style="color:blue">{{eventSource}}</td>
+        <td style="color: #3193dc">{{eventSource}}</td>
         <td>{{eventType}}</td>
     </tr>
     <tr class="hiddenRow collapse" id="event-{{eventId}}">
@@ -495,7 +495,7 @@ Script block to update Telemetry/Events grid
         //
         var initialize = function () {
 
-            var clearEvents = document.getElementById('clear-events');
+            var clearEvents = document.getElementById('btnClearEvents');
             clearEvents.addEventListener('click', function () {
                 clearEventData();
             });
