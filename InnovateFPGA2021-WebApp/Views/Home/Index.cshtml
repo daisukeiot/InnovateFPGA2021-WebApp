@@ -100,7 +100,7 @@ Main Page
                                 </div>
                             </td>
                             <td>
-                                <button type="button" id="btnDeviceModelIdCopy" class="modalButton"  disabled><span class="modalTdIcon glyphicon glyphicon-copy"></span>Copy</button>
+                                <button type="button" id="btnDeviceModelIdCopy" class="modalButton" disabled><span class="modalTdIcon glyphicon glyphicon-copy"></span>Copy</button>
                             </td>
                         </tr>
 
@@ -120,7 +120,7 @@ Main Page
                                 </div>
                             </td>
                             <td>
-                                <button type="button" id="btnDeviceConnectionStringCopy" class="modalButton"  disabled><span class="modalTdIcon glyphicon glyphicon-copy"></span>Copy</button>
+                                <button type="button" id="btnDeviceConnectionStringCopy" class="modalButton" disabled><span class="modalTdIcon glyphicon glyphicon-copy"></span>Copy</button>
                             </td>
                         </tr>
 
@@ -141,6 +141,32 @@ Main Page
                             </td>
                             <td>
                                 <button type="button" id="btnDeviceKeyCopy" class="modalButton" disabled><span class="modalTdIcon glyphicon glyphicon-copy"></span>Copy</button>
+                            </td>
+                        </tr>
+
+                        <tr class="modalTr">
+                            <td>
+                                <div class="modalToolTip">
+                                    <span class="modalTdIcon glyphicon glyphicon-copy"></span>
+                                    <span class="tooltiptext">A key used to authenticate device with IoT Hub.</span>
+                                </div>
+                            </td>
+                            <td class="modalTdLabel">
+                                <label class="modalLabel">Device Twin</label>
+                            </td>
+                            <td class="modalTdContents">
+                                <div id="deviceTwinNoContent" style="overflow-x: hidden;max-width:95%">
+                                    &nbsp;
+                                </div>
+                            </td>
+                            <td>
+                                <input type="button" id="btnDeviceTwin" class="modalButton" data-toggle="collapse" data-target="#DeviceTwinContent-Row" value="Display" disabled/>
+
+                            </td>
+                        </tr>
+                        <tr class="hiddenRow collapse" id="DeviceTwinContent-Row">
+                            <td colspan="4">
+                                <pre><code id="DeviceTwinContent" style="font-size:1.0rem">dddddddd</code></pre>
                             </td>
                         </tr>
                     </table>
@@ -747,6 +773,35 @@ Script block to update Telemetry/Events grid
         $('#btnDeviceKeyCopy').click(function (e) {
             console.log("Button " + e.target.id + " Click");
             navigator.clipboard.writeText($('#deviceKey').html().trim());
+        });
+
+        $('#btnDeviceTwin').click(function (e) {
+            console.log("Button " + e.target.id + " Click");
+            var selectedItem = $('#iotHubDeviceList option:selected');
+            var buttonValue = "Hide";
+            var expanded = e.target.ariaExpanded;
+
+            if (selectedItem != null) {
+
+                var deviceId = selectedItem.text().trim();
+
+                if (deviceId.length > 0) {
+
+                    if (expanded == null || expanded == 'false') {
+                        console.log("Getting Device Twin for " + deviceId);
+                        IoTHubGetDeviceTwin(deviceId);
+                    }
+                    else {
+                        buttonValue = "Display";
+                    }
+                }
+            }
+            else {
+                e.target.ariaExpanded = 'false';
+            }
+
+            e.target.value = buttonValue;
+
         });
 
         $('#btnNewDeviceIdCreate').click(function (e) {

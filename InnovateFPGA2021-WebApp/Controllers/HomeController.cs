@@ -138,6 +138,36 @@ namespace Portal.Controllers
             return Json(deviceData);
         }
 
+        // Retrieve the Device Twin.
+        // https://docs.microsoft.com/en-us/dotnet/api/microsoft.azure.devices.registrymanager.gettwinasync?view=azure-dotnet
+        //
+        [HttpGet]
+        public async Task<ActionResult> IoTHubGetDeviceTwin(string deviceId)
+        {
+            Device device = null;
+            Twin twin = null;
+
+            // Retrieve device
+            device = await _iothubdpshelper.IoTHubDeviceGet(deviceId).ConfigureAwait(false);
+
+            if (device == null)
+            {
+                return StatusCode(500, new { message = $"Could not find Device ID : {deviceId}" });
+            }
+
+            // Retrieve Deivce Twin for the device
+            twin = await _iothubdpshelper.IoTHubDeviceTwinGet(deviceId).ConfigureAwait(false);
+
+            if (twin == null)
+            {
+                return StatusCode(500, new { message = $"Could not find Twin for Device ID : {deviceId}" });
+            }
+
+            JObject twinJson = (JObject)JsonConvert.DeserializeObject(twin.ToJson());
+
+            return Json(twinJson.ToString());
+        }
+
         // Deletes a previously registered device from IoT Hub
         // https://docs.microsoft.com/en-us/dotnet/api/microsoft.azure.devices.registrymanager.removedeviceasync?view=azure-dotnet#Microsoft_Azure_Devices_RegistryManager_RemoveDeviceAsync_Microsoft_Azure_Devices_Device_System_Threading_CancellationToken_
         [HttpDelete]

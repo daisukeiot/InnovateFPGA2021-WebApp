@@ -25,11 +25,16 @@ function IoTHubModalClear() {
     $('#deviceConnectionString').html("");
     $('#deviceKey').html("");
     $('#newDeviceId').val("");
+    $('#DeviceTwinContent').html("");
+    $('#DeviceTwinContent-Row').toggle(false);
+
     IoTHubModalModuleClear();
     DisableButton($('#btnDeleteDevice'), true);
     DisableButton($('#btnDeviceModelIdCopy'), true);
     DisableButton($('#btnDeviceConnectionStringCopy'), true);
     DisableButton($('#btnDeviceKeyCopy'), true);
+    DisableButton($('#btnDeviceTwin'), true);
+    $('#btnDeviceTwin').val("Display");
 }
 
 function DpsModalClear() {
@@ -145,10 +150,12 @@ function IoTHubGetDeviceInfo(deviceId, iothubname) {
             if (response.symmetricKey.length > 0) {
                 DisableButton($('#btnDeviceConnectionStringCopy'), false);
                 DisableButton($('#btnDeviceKeyCopy'), false);
+                DisableButton($('#btnDeviceTwin'), false);
             }
             else {
                 DisableButton($('#btnDeviceConnectionStringCopy'), true);
                 DisableButton($('#btnDeviceKeyCopy'), true);
+                DisableButton($('#btnDeviceTwin'), true);
             }
 
             //$('#btnDeviceModelIdCopy').prop('disabled', true);
@@ -157,6 +164,28 @@ function IoTHubGetDeviceInfo(deviceId, iothubname) {
         error: function (jqXHR) {
             // clear all fields
             IoTHubModalClear();
+            alert(" Status: " + jqXHR.status + " " + jqXHR.responseText);
+            return false;
+        }
+    });
+}
+
+//
+// Gets device twin.
+//
+function IoTHubGetDeviceTwin(deviceId) {
+    console.log("Getting Device Twin for : " + deviceId);
+    $.ajax({
+        type: "GET",
+        url: '/home/IoTHubGetDeviceTwin',
+        data: { deviceId: deviceId },
+        success: function (response) {
+            $('#DeviceTwinContent').html(response);
+            $('#DeviceTwinContent').toggle(true);
+            return true;
+        },
+        error: function (jqXHR) {
+            // clear all fields
             alert(" Status: " + jqXHR.status + " " + jqXHR.responseText);
             return false;
         }
