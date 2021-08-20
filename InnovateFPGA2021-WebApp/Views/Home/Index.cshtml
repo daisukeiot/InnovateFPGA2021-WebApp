@@ -621,8 +621,9 @@ Script block to update Telemetry/Events grid
             if (selectedItem != null) {
                 var deviceId = selectedItem.text().trim();
 
+                IoTHubModalClear();
+
                 if (deviceId.length == 0) {
-                    IoTHubModalClear();
                     return;
                 }
                 console.log("device selected " + deviceId);
