@@ -160,7 +160,7 @@ Main Page
                                 </div>
                             </td>
                             <td>
-                                <input type="button" id="btnDeviceTwin" class="modalButton" data-toggle="collapse" data-target="#DeviceTwinContent-Row" value="Display" disabled/>
+                                <input type="button" id="btnDeviceTwin" class="modalButton" data-toggle="collapse" data-target="#DeviceTwinContent-Row" value="Show" disabled/>
 
                             </td>
                         </tr>
@@ -795,13 +795,13 @@ Script block to update Telemetry/Events grid
                     }
                     else {
                         $('#DeviceTwinContent-Row').toggle(false);
-                        buttonValue = "Display";
+                        buttonValue = "Show";
                     }
                 }
             }
             else {
                 $('#DeviceTwinContent-Row').toggle(false);
-                buttonValue = "Display";
+                buttonValue = "Show";
             }
 
             e.target.value = buttonValue;
