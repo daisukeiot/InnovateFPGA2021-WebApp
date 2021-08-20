@@ -447,7 +447,7 @@ Script block to update Telemetry/Events grid
         <td>{{eventTime}}</td>
         <td>{{eventDeviceId}}</td>
         <td>{{eventModelId}}</td>
-        <td style="color:red">{{eventSource}}</td>
+        <td>{{eventSource}}</td>
         <td>{{eventType}}</td>
     </tr>
     <tr class="hiddenRow collapse" id="event-{{eventId}}">
@@ -550,7 +550,7 @@ Script block to update Telemetry/Events grid
         //
         var clearEventData = function () {
             $('#device-events').find("tr:gt(0)").remove();
-            $('#device-events').hide();
+            //$('#device-events').hide();
         }
 
         //
