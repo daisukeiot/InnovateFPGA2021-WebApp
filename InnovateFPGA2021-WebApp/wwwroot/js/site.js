@@ -179,7 +179,6 @@ function IoTHubGetDeviceTwin(deviceId) {
         data: { deviceId: deviceId },
         success: function (response) {
             $('#DeviceTwinContent').html(response);
-            $('#DeviceTwinContent').toggle(true);
             return true;
         },
         error: function (jqXHR) {

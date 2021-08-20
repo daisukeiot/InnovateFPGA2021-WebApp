@@ -790,14 +790,17 @@ Script block to update Telemetry/Events grid
                     if (expanded == null || expanded == 'false') {
                         console.log("Getting Device Twin for " + deviceId);
                         IoTHubGetDeviceTwin(deviceId);
+                        $('#DeviceTwinContent-Row').toggle(true);
                     }
                     else {
+                        $('#DeviceTwinContent-Row').toggle(false);
                         buttonValue = "Display";
                     }
                 }
             }
             else {
-                e.target.ariaExpanded = 'false';
+                $('#DeviceTwinContent-Row').toggle(false);
+                buttonValue = "Display";
             }
 
             e.target.value = buttonValue;
