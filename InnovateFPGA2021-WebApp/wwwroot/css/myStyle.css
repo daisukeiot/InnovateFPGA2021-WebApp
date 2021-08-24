@@ -242,6 +242,9 @@ Tooltip
             border-color: transparent #5191c9 transparent transparent;
         }
 
+    .modalToolTip a:link a:visited {
+        color: #3193dc
+    }
     /* Show the modalToolTip text when you mouse over the modalToolTip container */
     .modalToolTip:hover .tooltiptext {
         visibility: visible;
