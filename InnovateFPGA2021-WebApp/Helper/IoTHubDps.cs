@@ -23,6 +23,7 @@ namespace InnovateFPGA2021_WebApp.Helper
 		Task<bool> IoTHubDeviceDelete(string deviceId);
 		Task<bool> IoTHubDeviceCreate(string deviceId, bool isEdge);
 		Task<bool> IoTHubDeviceCheck(string deviceId);
+		Task<string> IoTHubDeviceSendCommand(string deviceId, string commandName, string payLoa);
 		Task<DpsEnrollmentListViewModel> DpsEnrollmentListGet();
 		Task<DPS_ENROLLMENT_DATA> DpsEnrollmentGet(string enrollmentId, bool isGroup);
 		Task<AttestationMechanism> DpsAttestationMethodGet(string registrationId, bool isGroup);
@@ -35,6 +36,7 @@ namespace InnovateFPGA2021_WebApp.Helper
 		private readonly ILogger<IoTHubDps> _logger;
 		private readonly AppSettings _appSettings;
 		private readonly RegistryManager _registryManager;
+		private readonly ServiceClient _serviceClient;
 		private readonly ProvisioningServiceClient _provisioningServiceClient;
 
 		public IoTHubDps(IOptions<AppSettings> config, ILogger<IoTHubDps> logger)
@@ -42,6 +44,7 @@ namespace InnovateFPGA2021_WebApp.Helper
 			_logger = logger;
 			_appSettings = config.Value;
 			_registryManager = RegistryManager.CreateFromConnectionString(_appSettings.IoTHub.ConnectionString);
+			_serviceClient = ServiceClient.CreateFromConnectionString(_appSettings.IoTHub.ConnectionString);
 			_provisioningServiceClient = ProvisioningServiceClient.CreateFromConnectionString(_appSettings.Dps.ConnectionString);
 		}
 
@@ -276,6 +279,23 @@ namespace InnovateFPGA2021_WebApp.Helper
 			}
 
 			return device != null;
+		}
+
+		public async Task<string> IoTHubDeviceSendCommand(string deviceId, string commandName, string payLoa)
+        {
+			var methodInvocation = new CloudToDeviceMethod(commandName)
+			{
+				ResponseTimeout = TimeSpan.FromSeconds(30),
+			};
+
+			var dd = methodInvocation.GetPayloadAsJson();
+
+			var response = await _serviceClient.InvokeDeviceMethodAsync(deviceId, methodInvocation);
+
+			Console.WriteLine($"\nResponse status: {response.Status}, payload:\n\t{response.GetPayloadAsJson()}");
+
+			return (response.GetPayloadAsJson());
+
 		}
 
 		#endregion

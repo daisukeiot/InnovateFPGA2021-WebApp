@@ -212,11 +212,13 @@ Tooltip
     .modalToolTip .tooltiptext {
         font-size: 0.8em;
         visibility: hidden;
-        width: 250px;
-        background-color: #555;
+        max-width: 30vw;
+        min-width: 10vw;
+        width: max-content;
+        background-color: #5191c9;
         color: #fff;
-        text-align: center;
-        padding: 3px 0;
+        text-align: left;
+        padding: 6px;
         border-radius: 6px;
         /* Position the modalToolTip text */
         position: absolute;
@@ -238,7 +240,7 @@ Tooltip
             margin-left: -5px;
             border-width: 5px;
             border-style: solid;
-            border-color: transparent #555 transparent transparent;
+            border-color: transparent #5191c9 transparent transparent;
         }
 
     /* Show the modalToolTip text when you mouse over the modalToolTip container */
@@ -253,6 +255,10 @@ Tooltip
     color: #3193dc;
     font-weight: bold;
     font-size: larger;
+}
+
+.modalFooter {
+    padding-right: 26px;
 }
 
 .modalLabel {
@@ -440,3 +446,4 @@ input:checked + .slider:before {
         display: block;
         background: #3193dc;
     }
+

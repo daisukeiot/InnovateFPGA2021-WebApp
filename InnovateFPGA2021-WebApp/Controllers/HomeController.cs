@@ -235,6 +235,24 @@ namespace Portal.Controllers
             }
         }
 
+        // Invoke Device Method
+        // https://docs.microsoft.com/en-us/dotnet/api/microsoft.azure.devices.serviceclient.invokedevicemethodasync?view=azure-dotnet
+        [HttpPost]
+        public async Task<ActionResult> IoTHubSendCommand(string deviceId, string commandName, string payLoad)
+        {
+            try
+            {
+                var response = await _iothubdpshelper.IoTHubDeviceSendCommand(deviceId, commandName, payLoad);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Exception in IoTHubDeviceCreate() : {e.Message}");
+                return StatusCode(400, new { message = e.Message });
+            }
+
+            return Ok();
+        }
+
         #endregion
 
         /*************************************************************

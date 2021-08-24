@@ -64,6 +64,7 @@ function IoTHubModuleEnable(bEnable) {
 //
 var IoTHubDeviceListGet = function (selectValue) {
     console.log("Getting Device List");
+    $('#IoTHub_Busy_Indicator').css('display', 'flex');
     $.ajax({
         type: "GET",
         url: '/home/IoTHubDeviceListGet',
@@ -80,13 +81,16 @@ var IoTHubDeviceListGet = function (selectValue) {
             alert(" Status: " + jqXHR.status + " " + jqXHR.responseText);
         }
     });
+    $('#IoTHub_Busy_Indicator').hide();
 }
 
 //
-// Gets list of IoT Hub Devices
+// Gets list of IoT Hub modules
 //
 var IoTHubModuleListGet = function (deviceId, selectValue) {
     console.log("Getting Module List");
+    $('#IoTHub_Busy_Indicator').css('display', 'flex');
+
     $.ajax({
         type: "GET",
         url: '/home/IoTHubModuleListGet',
@@ -102,6 +106,8 @@ var IoTHubModuleListGet = function (deviceId, selectValue) {
             alert(" Status: " + jqXHR.status + " " + jqXHR.responseText);
         }
     });
+    $('#IoTHub_Busy_Indicator').hide();
+
 }
 
 function DisableButton(buttonId, bDisable) {
@@ -120,6 +126,7 @@ function DisableButton(buttonId, bDisable) {
 //
 function IoTHubGetDeviceInfo(deviceId, iothubname) {
     console.log("Getting Device Info : " + deviceId);
+    $('#IoTHub_Busy_Indicator').css('display', 'flex');
     $.ajax({
         type: "GET",
         url: '/home/IoTHubGetDeviceInfo',
@@ -166,6 +173,8 @@ function IoTHubGetDeviceInfo(deviceId, iothubname) {
             return false;
         }
     });
+    $('#IoTHub_Busy_Indicator').hide();
+
 }
 
 //

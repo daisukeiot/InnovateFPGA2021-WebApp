@@ -14,7 +14,7 @@ Main Page
     <fieldset>
         <legend><strong>Device Telemetry and Events</strong></legend>
         <div class="EventSection">
-            <button type="button" class="modalButton" style="float:left" id="btnClearEvents"><i class="far fa-trash-alt"></i>Clear Events</button>
+            <button class="modalButton" style="float:left" id="btnClearEvents"><i class="far fa-trash-alt"></i>Clear Events</button>
             <table id="device-events" class="table table-striped" style="max-height: 50vh;overflow: auto">
                 <thead>
                 <th>&nbsp;</th>
@@ -34,7 +34,7 @@ Main Page
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">
+                <button class="close" data-dismiss="modal">
                     <span aria-hidden="true">&times;</span>
                 </button>
                 <span class="modal-title modalTitle">
@@ -42,13 +42,15 @@ Main Page
                 </span>
             </div>
             <div class="modal-body">
+                @*<input type="button" id="btnTestCommand" class="modalButton" value="test" style="float:left;">*@
+
                 <fieldset>
                     <table style="width:100%;" class="tableModal">
                         <tr class="modalTr" style="background-color:#E7E9EB">
                             <td>
                                 <div class="modalToolTip">
-                                    <span class="modalTdIcon glyphicon glyphicon-info-sign"></span>
-                                    <span class="tooltiptext">Device ID in Azure IoT Hub.</span>
+                                    <a href="https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-devguide-identity-registry" target="_blank"><span class="modalTdIcon glyphicon glyphicon-info-sign"></span></a>
+                                    <span class="tooltiptext">Device ID in Azure IoT Hub. Click <span class="modalTdIcon glyphicon glyphicon-info-sign"></span> to learn more.</span>
                                 </div>
                             </td>
                             <td class="modalTdLabel">
@@ -61,9 +63,10 @@ Main Page
                                 </div>
                             </td>
                             <td>
-                                <button type="button" id="btnDeleteDevice" class="modalButton" disabled><span class="modalTdIcon glyphicon glyphicon-trash"></span>Delete</button>
+                                <button id="btnDeleteDevice" class="modalButton" disabled><span class="modalTdIcon glyphicon glyphicon-trash"></span>Delete</button>
                             </td>
                         </tr>
+
                         <tr class="modalTr">
                             <td>
                                 <div class="modalToolTip">
@@ -80,15 +83,15 @@ Main Page
                                 </div>
                             </td>
                             <td>
-                                <button type="button" id="btnDeviceConnectionRefresh" class="modalButton"><span class="modalTdIcon glyphicon glyphicon-refresh"></span>Refresh</button>
+                                <button id="btnDeviceConnectionRefresh" class="modalButton"><span class="modalTdIcon glyphicon glyphicon-refresh"></span>Refresh</button>
                             </td>
                         </tr>
 
                         <tr class="modalTr" style="background-color:#e7e9eb">
                             <td>
                                 <div class="modalToolTip">
-                                    <span class="modalTdIcon glyphicon glyphicon-info-sign"></span>
-                                    <span class="tooltiptext">IoT Plug and Play Digital Twin Model ID (DTMI).</span>
+                                    <a href="https://docs.microsoft.com/azure/iot-develop/concepts-developer-guide-device?pivots=programming-language-ansi-c#model-id-announcement" target="_blank"><span class="modalTdIcon glyphicon glyphicon-info-sign"></span></a>
+                                    <span class="tooltiptext">IoT Plug and Play Digital Twin Model ID (DTMI).  Click <span class="modalTdIcon glyphicon glyphicon-info-sign"></span> to learn more.</span>
                                 </div>
                             </td>
                             <td class="modalTdLabel">
@@ -100,15 +103,15 @@ Main Page
                                 </div>
                             </td>
                             <td>
-                                <button type="button" id="btnDeviceModelIdCopy" class="modalButton" disabled><span class="modalTdIcon glyphicon glyphicon-copy"></span>Copy</button>
+                                <button id="btnDeviceModelIdCopy" class="modalButton" disabled><span class="modalTdIcon glyphicon glyphicon-copy"></span>Copy</button>
                             </td>
                         </tr>
 
                         <tr class="modalTr">
                             <td>
                                 <div class="modalToolTip">
-                                    <span class="modalTdIcon glyphicon glyphicon-copy"></span>
-                                    <span class="tooltiptext">Device Connection String to be used to connect device to Azure IoT Hub</span>
+                                    <a href="https://devblogs.microsoft.com/iotdev/understand-different-connection-strings-in-azure-iot-hub/#iothubdeviceconn" target="_blank"><span class="modalTdIcon glyphicon glyphicon-info-sign"></span></a>
+                                    <span class="tooltiptext">Device Connection String to be used to connect device to Azure IoT Hub. Click <span class="modalTdIcon glyphicon glyphicon-info-sign"></span> to learn more.</span>
                                 </div>
                             </td>
                             <td class="modalTdLabel">
@@ -120,15 +123,15 @@ Main Page
                                 </div>
                             </td>
                             <td>
-                                <button type="button" id="btnDeviceConnectionStringCopy" class="modalButton" disabled><span class="modalTdIcon glyphicon glyphicon-copy"></span>Copy</button>
+                                <button id="btnDeviceConnectionStringCopy" class="modalButton" disabled><span class="modalTdIcon glyphicon glyphicon-copy"></span>Copy</button>
                             </td>
                         </tr>
 
                         <tr class="modalTr" style="background-color:#E7E9EB">
                             <td>
                                 <div class="modalToolTip">
-                                    <span class="modalTdIcon glyphicon glyphicon-copy"></span>
-                                    <span class="tooltiptext">A key used to authenticate device with IoT Hub.</span>
+                                    <a href="https://docs.microsoft.com/azure/iot-hub/iot-hub-dev-guide-sas?tabs=node#use-a-symmetric-key-in-the-identity-registry" target="_blank"><span class="modalTdIcon glyphicon glyphicon-info-sign"></span></a>
+                                    <span class="tooltiptext">Symmetric key used to authenticate device with IoT Hub. Click <span class="modalTdIcon glyphicon glyphicon-info-sign"></span> to learn more.</span>
                                 </div>
                             </td>
                             <td class="modalTdLabel">
@@ -140,19 +143,19 @@ Main Page
                                 </div>
                             </td>
                             <td>
-                                <button type="button" id="btnDeviceKeyCopy" class="modalButton" disabled><span class="modalTdIcon glyphicon glyphicon-copy"></span>Copy</button>
+                                <button id="btnDeviceKeyCopy" class="modalButton" disabled><span class="modalTdIcon glyphicon glyphicon-copy"></span>Copy</button>
                             </td>
                         </tr>
 
                         <tr class="modalTr">
                             <td>
                                 <div class="modalToolTip">
-                                    <span class="modalTdIcon glyphicon glyphicon-copy"></span>
-                                    <span class="tooltiptext">A key used to authenticate device with IoT Hub.</span>
+                                    <a href="https://docs.microsoft.com/azure/iot-hub/iot-hub-devguide-device-twins" target="_blank"><span class="modalTdIcon glyphicon glyphicon-info-sign"></span></a>
+                                    <span class="tooltiptext">Display Device Twins.  Click <span class="modalTdIcon glyphicon glyphicon-info-sign"></span> to learn more.</span>
                                 </div>
                             </td>
                             <td class="modalTdLabel">
-                                <label class="modalLabel">Device Twin</label>
+                                <label class="modalLabel">Device Twins</label>
                             </td>
                             <td class="modalTdContents">
                                 <div id="deviceTwinNoContent" style="overflow-x: hidden;max-width:95%">
@@ -160,13 +163,13 @@ Main Page
                                 </div>
                             </td>
                             <td>
-                                <input type="button" id="btnDeviceTwin" class="modalButton" data-toggle="collapse" data-target="#DeviceTwinContent-Row" value="Show" disabled/>
-
+                                <input type="button" id="btnDeviceTwin" class="modalButton" data-toggle="collapse" data-target="#DeviceTwinContent-Row" value="Show" disabled />
                             </td>
                         </tr>
+
                         <tr class="hiddenRow collapse" id="DeviceTwinContent-Row">
                             <td colspan="4">
-                                <pre  style="max-height:40vh;overflow-y:auto"><code id="DeviceTwinContent" style="font-size:1.0rem">&nbsp;</code></pre>
+                                <pre style="max-height:40vh;overflow-y:auto"><code id="DeviceTwinContent" style="font-size:1.0rem">&nbsp;</code></pre>
                             </td>
                         </tr>
                     </table>
@@ -177,8 +180,8 @@ Main Page
                         <tr class="modalTr" style="background-color:#E7E9EB">
                             <td>
                                 <div class="modalToolTip">
-                                    <span class="modalTdIcon glyphicon glyphicon-info-sign"></span>
-                                    <span class="tooltiptext">Module ID of Azure IoT Edge.</span>
+                                    <a href="https://docs.microsoft.com/azure/iot-edge/iot-edge-modules" target="_blank"><span class="modalTdIcon glyphicon glyphicon-info-sign"></span></a>
+                                    <span class="tooltiptext">Module ID of Azure IoT Edge. Click <span class="modalTdIcon glyphicon glyphicon-info-sign"></span> to learn more.</span>
                                 </div>
                             </td>
                             <td class="modalTdLabel">
@@ -191,9 +194,10 @@ Main Page
                                 </div>
                             </td>
                             <td class="modalTdButton">
-                                <button type="button" id="btnDeleteModule" class="modalButton" style="visibility:hidden"></button>
+                                <button id="btnDeleteModule" class="modalButton" style="visibility:hidden" />
                             </td>
                         </tr>
+
                         <tr class="modalTr">
                             <td>
                                 <div class="modalToolTip">
@@ -210,15 +214,15 @@ Main Page
                                 </div>
                             </td>
                             <td class="modalTdButton">
-                                <button type="button" id="btnModuleConnectionRefresh" class="modalButton"><span class="modalTdIcon glyphicon glyphicon-refresh"></span>Refresh</button>
+                                <button id="btnModuleConnectionRefresh" class="modalButton"><span class="modalTdIcon glyphicon glyphicon-refresh"></span>Refresh</button>
                             </td>
                         </tr>
 
                         <tr class="modalTr" style="background-color:#e7e9eb">
                             <td>
                                 <div class="modalToolTip">
-                                    <span class="modalTdIcon glyphicon glyphicon-info-sign"></span>
-                                    <span class="tooltiptext">IoT Plug and Play Digital Twin Model ID (DTMI).</span>
+                                    <a href="https://docs.microsoft.com/azure/iot-develop/concepts-developer-guide-device?pivots=programming-language-ansi-c#model-id-announcement" target="_blank"><span class="modalTdIcon glyphicon glyphicon-info-sign"></span></a>
+                                    <span class="tooltiptext">IoT Plug and Play Digital Twin Model ID (DTMI).  Click <span class="modalTdIcon glyphicon glyphicon-info-sign"></span> to learn more.</span>
                                 </div>
                             </td>
                             <td class="modalTdLabel">
@@ -230,7 +234,7 @@ Main Page
                                 </div>
                             </td>
                             <td class="modalTdButton">
-                                <button type="button" id="btnDeviceModelIdCopy" class="modalButton" disabled><span class="modalTdIcon glyphicon glyphicon-copy"></span>Copy</button>
+                                <button id="btnDeviceModelIdCopy" class="modalButton" disabled><span class="modalTdIcon glyphicon glyphicon-copy"></span>Copy</button>
                             </td>
                         </tr>
 
@@ -240,7 +244,7 @@ Main Page
                     <table style="width:100%">
                         <tr data-toggle="collapse" data-target="#new-deviceid" class="accordian-toggle" style="width:100%">
                             <td style="text-align:center">
-                                <button type="button" id="btnIoTHubNewDevice" class="modalButton" style="width:100%">
+                                <button id="btnIoTHubNewDevice" class="modalButton" style="width:100%">
                                     <span class="modalTdIcon glyphicon glyphicon-chevron-down"></span>
                                     Add New Device ID
                                     <span class="modalTdIcon glyphicon glyphicon-chevron-down"></span>
@@ -275,14 +279,14 @@ Main Page
                                         </tr>
                                     </table>
                                 </div>
-                                <button type="button" id="btnNewDeviceIdCreate" class="modalButton"  disabled>Create</button>
+                                <button id="btnNewDeviceIdCreate" class="modalButton" disabled>Create</button>
                             </td>
                         </tr>
                     </table>
                 </fieldset>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <div class="modal-footer modalFooter">
+                <input type="button" class="modalButton" data-dismiss="modal" value="Close">
             </div>
         </div>
     </div>
@@ -292,7 +296,7 @@ Main Page
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">
+                <button class="close" data-dismiss="modal">
                     <span aria-hidden="true">&times;</span>
                 </button>
                 <span class="modal-title modalTitle">
@@ -305,8 +309,8 @@ Main Page
                         <tr class="modalTr" style="background-color:#E7E9EB">
                             <td>
                                 <div class="modalToolTip">
-                                    <span class="modalTdIcon glyphicon glyphicon-info-sign"></span>
-                                    <span class="tooltiptext">List of DPS device enrollments.</span>
+                                    <a href="https://docs.microsoft.com/azure/iot-dps/how-to-manage-enrollments" target="_blank"><span class="modalTdIcon glyphicon glyphicon-info-sign"></span></a>
+                                    <span class="tooltiptext">List of DPS device enrollments. Click <span class="modalTdIcon glyphicon glyphicon-info-sign"></span> to learn more.</span>
                                 </div>
                             </td>
                             <td class="modalTdLabel">
@@ -319,15 +323,15 @@ Main Page
                                 </div>
                             </td>
                             <td>
-                                <button type="button" id="btnDpsEnrollmentDelete" class="modalButton"  disabled><span class="modalTdIcon glyphicon glyphicon-trash"></span>Delete</button>
+                                <button id="btnDpsEnrollmentDelete" class="modalButton"  disabled><span class="modalTdIcon glyphicon glyphicon-trash"></span>Delete</button>
                             </td>
                         </tr>
 
                         <tr class="modalTr">
                             <td>
                                 <div class="modalToolTip">
-                                    <span class="modalTdIcon glyphicon glyphicon-info-sign"></span>
-                                    <span class="tooltiptext">Type of DPS Enrollmnet.  Either Group or Individual</span>
+                                    <a href="https://docs.microsoft.com/azure/iot-dps/concepts-service#enrollment" target="_blank"><span class="modalTdIcon glyphicon glyphicon-info-sign"></span></a>
+                                    <span class="tooltiptext">Type of DPS Enrollmnet.  Either Group or Individual.  Click <span class="modalTdIcon glyphicon glyphicon-info-sign"></span> to learn more.</span>
                                 </div>
                             </td>
                             <td class="modalTdLabel">
@@ -339,15 +343,15 @@ Main Page
                                 </div>
                             </td>
                             <td>
-                                <button type="button" class="modalButton" style="visibility:hidden" disabled>Dummy</button>
+                                <button class="modalButton" style="visibility:hidden" disabled>Dummy</button>
                             </td>
                         </tr>
 
                         <tr class="modalTr" style="background-color:#E7E9EB">
                             <td>
                                 <div class="modalToolTip">
-                                    <span class="modalTdIcon glyphicon glyphicon-copy"></span>
-                                    <span class="tooltiptext">ID Scope of DPS</span>
+                                    <a href="https://docs.microsoft.com/azure/iot-dps/concepts-service#id-scope" target="_blank"><span class="modalTdIcon glyphicon glyphicon-info-sign"></span></a>
+                                    <span class="tooltiptext">ID Scope of DPS. Click <span class="modalTdIcon glyphicon glyphicon-info-sign"></span> to learn more.</span></span>
                                 </div>
                             </td>
                             <td class="modalTdLabel">
@@ -359,15 +363,15 @@ Main Page
                                 </div>
                             </td>
                             <td>
-                                <button type="button" id="btnDpsIdScopeCopy" class="modalButton"  disabled><span class="modalTdIcon glyphicon glyphicon-copy"></span>Copy</button>
+                                <button id="btnDpsIdScopeCopy" class="modalButton"  disabled><span class="modalTdIcon glyphicon glyphicon-copy"></span>Copy</button>
                             </td>
                         </tr>
 
                         <tr class="modalTr">
                             <td>
                                 <div class="modalToolTip">
-                                    <span class="modalTdIcon glyphicon glyphicon-copy"></span>
-                                    <span class="tooltiptext">Copy primary key used to authenticate device with DPS.</span>
+                                    <a href="https://docs.microsoft.com/azure/iot-dps/concepts-symmetric-key-attestation?tabs=linux" target="_blank"><span class="modalTdIcon glyphicon glyphicon-info-sign"></span></a>
+                                    <span class="tooltiptext">Copy primary key used to authenticate device with DPS. Click <span class="modalTdIcon glyphicon glyphicon-info-sign"></span> to learn more.</span>
                                 </div>
                             </td>
                             <td class="modalTdLabel">
@@ -380,7 +384,7 @@ Main Page
                                 </div>
                             </td>
                             <td>
-                                <button type="button" id="btnDpsKeyCopy" class="modalButton"  disabled><span class="modalTdIcon glyphicon glyphicon-copy"></span>Copy</button>
+                                <button id="btnDpsKeyCopy" class="modalButton"  disabled><span class="modalTdIcon glyphicon glyphicon-copy"></span>Copy</button>
                             </td>
                         </tr>
                     </table>
@@ -389,7 +393,7 @@ Main Page
                     <table style="width:100%">
                         <tr data-toggle="collapse" id="new-enrollmentAdd" data-target="#new-enrollment" class="accordian-toggle" style="width:100%">
                             <td style="text-align:center">
-                                <button type="button" id="btnDpsAddEnrollment" class="modalButton" style="width:100%">
+                                <button id="btnDpsAddEnrollment" class="modalButton" style="width:100%">
                                     <span class="modalTdIcon glyphicon glyphicon-chevron-down"></span>
                                     Add New Enrollment
                                     <span class="modalTdIcon glyphicon glyphicon-chevron-down"></span>
@@ -446,15 +450,15 @@ Main Page
 
                                     </table>
                                 </div>
-                                <button type="button" id="btnDpsNewEnrollmentCreate" class="modalButton"  disabled>Create</button>
+                                <button id="btnDpsNewEnrollmentCreate" class="modalButton"  disabled>Create</button>
                             </td>
                         </tr>
                     </table>
                 </fieldset>
 
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <div class="modal-footer modalFooter">
+                <input type="button" class="modalButton" data-dismiss="modal" value="Close">
             </div>
         </div>
     </div>
@@ -536,10 +540,6 @@ Script block to update Telemetry/Events grid
                 .start()
                 .then(() => console.log('SignalR Connection Started'))
                 .catch(err => console.error(err.toString()));
-
-            hubConnection.on('SignalRTest', function (payload) {
-                alert("SignalR Test : " + JSON.stringify(payload));
-            });
 
             hubConnection.on('DeviceTelemetry', function (payload) {
                 var jsonData = JSON.parse(payload);
@@ -880,6 +880,35 @@ Script block to update Telemetry/Events grid
                 $('#fieldEdgeModule').hide();
             });
 
+        });
+
+
+        $('#btnTestCommand').click(function (e) {
+            console.log("Button " + e.target.id + " Click");
+
+            var selectedItem = $('#iotHubDeviceList option:selected')
+
+            if (selectedItem != null) {
+                var deviceId = selectedItem.text().trim();
+
+                if (deviceId.length == 0) {
+                    return;
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: '/home/IoTHubSendCommand',
+                    data: { deviceId: deviceId, commandName: 'reboot', payLoad: null },
+                    success: function (response) {
+                        return true;
+                    },
+                    error: function (jqXHR) {
+                        // clear all fields
+                        alert(" Status: " + jqXHR.status + " " + jqXHR.responseText);
+                        return false;
+                    }
+                });
+            }
         });
     </script>
 }
