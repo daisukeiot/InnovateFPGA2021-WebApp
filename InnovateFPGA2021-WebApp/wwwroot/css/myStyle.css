@@ -143,6 +143,10 @@ button:focus {
         pointer-events: none;
     }
 
+.modalContent {
+    min-width: 44em;
+}
+
 table {
     border-spacing: 2px;
 }
