@@ -457,3 +457,15 @@ input:checked + .slider:before {
         background: #3193dc;
     }
 
+.auto_height {
+    width: 90%;
+    height:5px;
+}
+
+.myTextArea {
+    width:100%;
+    min-height:50vh;
+    font-family:Consolas;
+    font-size:small;
+    max-height:70vh;
+}

@@ -13,6 +13,9 @@ using Microsoft.Azure.Devices.Shared;
 using Newtonsoft.Json;
 using Microsoft.Azure.Devices.Provisioning.Service;
 using System.Threading;
+using System.Dynamic;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
 
 namespace Portal.Controllers
 {
@@ -21,13 +24,18 @@ namespace Portal.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly AppSettings _appSettings;
         private readonly IIoTHubDps _iothubdpshelper;
+        private IWebHostEnvironment _environment;
+        private string _deploymentManifestReferenceApp;
 
-        public HomeController(IOptions<AppSettings> optionsAccessor, ILogger<HomeController> logger, IIoTHubDps iothubdpshelper)
+        public HomeController(IWebHostEnvironment environment, IOptions<AppSettings> optionsAccessor, ILogger<HomeController> logger, IIoTHubDps iothubdpshelper)
         {
             _logger = logger;
             _appSettings = optionsAccessor.Value;
             _logger.LogInformation("HomeController");
             _iothubdpshelper = iothubdpshelper;
+            _environment = environment;
+            FileInfo fileInfoDeploymentManifestReferenceApp = new FileInfo(Path.Combine(this._environment.WebRootPath, "appdata/DeploymentManifestReferenceApp.json"));
+            _deploymentManifestReferenceApp = System.IO.File.ReadAllText(fileInfoDeploymentManifestReferenceApp.ToString());
         }
 
         public IActionResult Index()
@@ -35,6 +43,12 @@ namespace Portal.Controllers
             HomeView homeView = new HomeView();
             ViewData["DpsIdScope"] = _appSettings.Dps.IdScope.ToString();
             ViewData["IoTHubName"] = _iothubdpshelper.IoTHubHubNameGet(_appSettings.IoTHub.ConnectionString);
+
+            FileInfo fileInfoDeploymentManifestEmpty = new FileInfo(Path.Combine(this._environment.WebRootPath, "appdata/DeploymentManifestEmpty.json"));
+            string deploymentManifestEmpty = System.IO.File.ReadAllText(fileInfoDeploymentManifestEmpty.ToString());
+
+            ViewData["DeploymentManifestEmpty"] = deploymentManifestEmpty;
+
             //ViewBag.IoTHubDeviceList = await _iothubdpshelper.IoTHubDeviceListGet();
             return View(homeView);
         }
@@ -235,6 +249,78 @@ namespace Portal.Controllers
             }
         }
 
+        // Deploy IoT Edge Module
+        // https://docs.microsoft.com/dotnet/api/microsoft.azure.devices.registrymanager.applyconfigurationcontentondeviceasync?view=azure-dotnet
+        [HttpPost]
+        public async Task<ActionResult> IoTHubDeployManifest(string deviceId, string deploymentManifest)
+        {
+            try
+            {
+                await _iothubdpshelper.IoTHubDeployManifest(deviceId, deploymentManifest);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Exception in IoTHubDeployManifest() : {e.Message}");
+                return StatusCode(400, new { message = e.Message });
+            }
+
+            return Ok();
+        }
+
+        // Add IoT Edge Module
+        // https://docs.microsoft.com/dotnet/api/microsoft.azure.devices.registrymanager.addmoduleasync?view=azure-dotnet
+        [HttpPost]
+        public async Task<ActionResult> IoTHubAddModule(string deviceId, string moduleId, string image, string createOption)
+        {
+            try
+            {
+                dynamic expando = new ExpandoObject();
+
+                await _iothubdpshelper.IoTHubAddModule(deviceId, moduleId, image, createOption);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Exception in IoTHubAddModule() : {e.Message}");
+                return StatusCode(400, new { message = e.Message });
+            }
+
+            return Ok();
+        }
+
+        // Remove IoT Edge Module
+        // https://docs.microsoft.com/dotnet/api/microsoft.azure.devices.registrymanager.addmoduleasync?view=azure-dotnet
+        [HttpPost]
+        public async Task<ActionResult> IoTHubRemoveModule(string deviceId, string moduleId)
+        {
+            try
+            {
+                await _iothubdpshelper.IoTHubRemoveModule(deviceId, moduleId);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Exception in IoTHubRemoveModule() : {e.Message}");
+                return StatusCode(400, new { message = e.Message });
+            }
+
+            return Ok();
+        }
+
+        // Deploy Reference Application.  Deployment Manifest is hard coded
+        [HttpPost]
+        public async Task<ActionResult> IoTHubDeployReferenceApp(string deviceId)
+        {
+            try
+            {
+                await _iothubdpshelper.IoTHubDeployReferenceApp(deviceId, this._deploymentManifestReferenceApp);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Exception in IoTHubDeployReferenceApp() : {e.Message}");
+                return StatusCode(400, new { message = e.Message });
+            }
+
+            return Ok();
+        }
         // Invoke Device Method
         // https://docs.microsoft.com/en-us/dotnet/api/microsoft.azure.devices.serviceclient.invokedevicemethodasync?view=azure-dotnet
         [HttpPost]
@@ -253,6 +339,23 @@ namespace Portal.Controllers
             return Ok();
         }
 
+        // Invoke Device Method
+        // https://docs.microsoft.com/en-us/dotnet/api/microsoft.azure.devices.serviceclient.invokedevicemethodasync?view=azure-dotnet
+        [HttpPost]
+        public async Task<ActionResult> IoTHubDeployIoTEdgeModule(string deviceId, string config)
+        {
+            try
+            {
+                await _iothubdpshelper.IoTHubApplyConfiguration(deviceId, config);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Exception in IoTHubDeviceCreate() : {e.Message}");
+                return StatusCode(400, new { message = e.Message });
+            }
+
+            return Ok();
+        }
         #endregion
 
         /*************************************************************

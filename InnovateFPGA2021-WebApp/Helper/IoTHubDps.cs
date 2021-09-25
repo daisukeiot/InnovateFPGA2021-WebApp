@@ -5,6 +5,8 @@ using Microsoft.Azure.Devices.Provisioning.Service;
 using Microsoft.Azure.Devices.Shared;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,13 +24,23 @@ namespace InnovateFPGA2021_WebApp.Helper
 		Task<Twin> IoTHubDeviceTwinGet(string deviceId);
 		Task<bool> IoTHubDeviceDelete(string deviceId);
 		Task<bool> IoTHubDeviceCreate(string deviceId, bool isEdge);
+		Task IoTHubDeployManifest(string deviceId, string deploymentManifest);
+		Task IoTHubAddModule(string deviceId, string moduleId, string image, string createOption);
+		Task IoTHubRemoveModule(string deviceId, string moduleId);
+		Task IoTHubApplyModuleConfiguration(string deviceId, ConfigurationContent moduleConfig);
+		Task IoTHubDeployReferenceApp(string deviceId, string manifest);
 		Task<bool> IoTHubDeviceCheck(string deviceId);
 		Task<string> IoTHubDeviceSendCommand(string deviceId, string commandName, string payLoa);
+		Task<bool> IoTHubApplyConfiguration(string deviceId, string content);
+		//object GetEdgeAgentProperties(string moduleId, string image, string createOption);
+		object GetEdgeAgentProperties();
+		object GetEdgeHubProperties();
 		Task<DpsEnrollmentListViewModel> DpsEnrollmentListGet();
 		Task<DPS_ENROLLMENT_DATA> DpsEnrollmentGet(string enrollmentId, bool isGroup);
 		Task<AttestationMechanism> DpsAttestationMethodGet(string registrationId, bool isGroup);
 		Task<bool> DpsEnrollmentCreate(string registrationId, bool isGroup, bool isEdge);
 		Task<bool> DpsEnrollmentDelete(string registrationId, bool isGroup);
+		object GetModuleConfiguration(string image, string createOption);
 	}
 
 	public class IoTHubDps : IIoTHubDps
@@ -38,7 +50,7 @@ namespace InnovateFPGA2021_WebApp.Helper
 		private readonly RegistryManager _registryManager;
 		private readonly ServiceClient _serviceClient;
 		private readonly ProvisioningServiceClient _provisioningServiceClient;
-
+			
 		public IoTHubDps(IOptions<AppSettings> config, ILogger<IoTHubDps> logger)
 		{
 			_logger = logger;
@@ -192,15 +204,15 @@ namespace InnovateFPGA2021_WebApp.Helper
 		{
 			IQuery query = _registryManager.CreateQuery($"select * from devices");
 
-            try
-            {
+			try
+			{
 				while (query.HasMoreResults)
 				{
 					var twins = await query.GetNextAsTwinAsync().ConfigureAwait(false);
 					foreach (var twin in twins)
 					{
 						if (twin.DeviceId.Equals(deviceId))
-                        {
+						{
 							_logger.LogInformation($"Found a device : {twin.DeviceId}");
 							return true;
 						}
@@ -281,8 +293,233 @@ namespace InnovateFPGA2021_WebApp.Helper
 			return device != null;
 		}
 
-		public async Task<string> IoTHubDeviceSendCommand(string deviceId, string commandName, string payLoa)
+		/**********************************************************************************
+		 * Deploy Azure IoT Edge Module
+		 * Use deployment manifest provded by user
+		 *********************************************************************************/
+		public async Task IoTHubDeployManifest(string deviceId, string deploymentManifest)
+		{
+			ConfigurationContent configContent = null;
+			IEnumerable<Module> modules;
+
+			if (string.IsNullOrEmpty(deploymentManifest))
+            {
+				return;
+            }
+
+			configContent = JsonConvert.DeserializeObject<ConfigurationContent>(deploymentManifest);
+
+			// Sanity check.
+			// Check existing modules.  If the same module already exists, remove them.
+			modules = await _registryManager.GetModulesOnDeviceAsync(deviceId);
+
+			foreach (var module in modules)
+			{
+				_logger.LogInformation($"Found IoT Edge Module : {module.Id}");
+
+				if (module.Id.StartsWith("$"))
+				{
+					continue;
+				}
+				else
+				{
+					foreach (var moduleContentKey in configContent.ModulesContent.Keys)
+					{
+						if (module.Id.Equals(moduleContentKey))
+						{
+							// Remove existing one.
+							_logger.LogInformation($"Removing Module : {moduleContentKey}");
+							await _registryManager.RemoveModuleAsync(module);
+						}
+					}
+				}
+			}
+
+			await _registryManager.ApplyConfigurationContentOnDeviceAsync(deviceId, configContent);
+
+		}
+
+		/**********************************************************************************
+		 * Add IoT Edge Module to the device
+		 *********************************************************************************/
+		public async Task IoTHubAddModule(string deviceId, string moduleId, string image, string createOption)
+		{
+			var modulesContent = new Dictionary<string, IDictionary<string, object>>();
+
+			// Build Configuraiton for $edgeAgent from Twin
+			var edgeAgentTwin = await _registryManager.GetTwinAsync(deviceId, "$edgeAgent");
+
+			if (edgeAgentTwin == null)
+			{
+				return;
+			}
+
+			// Search module
+			JObject edgeAgentTwinJ = JObject.FromObject(edgeAgentTwin.Properties.Desired);
+
+			if (edgeAgentTwinJ.TryGetValue("modules", out JToken modules))
+			{
+				IList<JToken> removeList = new List<JToken>();
+				foreach (JProperty module in modules.Children())
+				{
+					if (module.Name.Equals(moduleId))
+					{
+						// Module already exists.  Remove it.
+						removeList.Add(module);
+					}
+				}
+
+				foreach (JToken module in removeList)
+				{
+					module.Remove();
+				}
+
+				JObject newModules = (JObject)edgeAgentTwinJ["modules"];
+				string createOptionLocal;
+
+				if (string.IsNullOrEmpty(createOption))
+                {
+					createOptionLocal = string.Empty;
+				}
+				else
+                {
+					createOptionLocal = createOption;
+                }
+
+				JObject newModule = buildNewModuleContent(moduleId, image, createOptionLocal);
+
+				newModules.Add(moduleId, newModule);
+
+				edgeAgentTwin.Properties.Desired["modules"] = edgeAgentTwinJ["modules"];
+
+				var edgeAgentDesired = edgeAgentTwin.GetDesiredPropertiesDictionary();
+
+				modulesContent.Add("$edgeAgent", edgeAgentDesired);
+
+				// Build Configuraiton for $edgeHub from Twin
+				var twinEdgeHub = await _registryManager.GetTwinAsync(deviceId, "$edgeHub");
+				var edgeHubDesiredProperties = twinEdgeHub.GetDesiredPropertiesDictionary();
+				modulesContent.Add("$edgeHub", edgeHubDesiredProperties);
+
+				await _registryManager.AddModuleAsync(new Module(deviceId, moduleId));
+				await IoTHubApplyModuleConfiguration(deviceId, new ConfigurationContent { ModulesContent = modulesContent });
+			}
+		}
+
+		private JObject buildNewModuleContent(string moduleId, string image, string createOption)
         {
+			JObject moduleContent =
+							new JObject(
+								new JProperty("version", "1.0"),
+								new JProperty("type", "docker"),
+								new JProperty("status", "running"),
+								new JProperty("restartPolicy", "always"),
+								new JProperty("settings",
+									new JObject(
+										new JProperty("image", image),
+										new JProperty("createOptions", createOption)
+										)
+									)
+								);
+
+			return moduleContent;
+        }
+
+		/**********************************************************************************
+		 * Remove IoT Edge Module from the device
+		 *********************************************************************************/
+		public async Task IoTHubRemoveModule(string deviceId, string moduleId)
+		{
+			var modulesContent = new Dictionary<string, IDictionary<string, object>>();
+
+			// Build Configuraiton for $edgeAgent from Twin
+			var edgeAgentTwin = await _registryManager.GetTwinAsync(deviceId, "$edgeAgent");
+
+			if (edgeAgentTwin == null)
+            {
+				return;
+            }
+
+			// Search module
+			JObject edgeAgentTwinJ = JObject.FromObject(edgeAgentTwin.Properties.Desired);
+
+			if (edgeAgentTwinJ.TryGetValue("modules", out JToken modules))
+            {
+				IList<JToken> removeList = new List<JToken>();
+				foreach (JProperty module in modules.Children())
+				{
+					if (module.Name.Equals(moduleId))
+					{
+						removeList.Add(module);
+					}
+				}
+
+				foreach (JToken module in removeList)
+				{
+					module.Remove();
+				}
+
+				edgeAgentTwin.Properties.Desired["modules"] = edgeAgentTwinJ["modules"];
+
+				var edgeAgentDesired = edgeAgentTwin.GetDesiredPropertiesDictionary();
+
+				modulesContent.Add("$edgeAgent", edgeAgentDesired);
+
+				// Build Configuraiton for $edgeHub from Twin
+				var twinEdgeHub = await _registryManager.GetTwinAsync(deviceId, "$edgeHub");
+				var edgeHubDesiredProperties = twinEdgeHub.GetDesiredPropertiesDictionary();
+				modulesContent.Add("$edgeHub", edgeHubDesiredProperties);
+
+				await IoTHubApplyModuleConfiguration(deviceId, new ConfigurationContent { ModulesContent = modulesContent });
+				await _registryManager.RemoveModuleAsync(deviceId, moduleId);
+			}
+		}
+
+		/**********************************************************************************
+		 * Apply IoT Edge Module Configuration
+		 *********************************************************************************/
+		public async Task IoTHubApplyModuleConfiguration(string deviceId, ConfigurationContent moduleConfig)
+        {
+			await _registryManager.ApplyConfigurationContentOnDeviceAsync(deviceId, moduleConfig);
+		}
+
+		/**********************************************************************************
+		 * Deploy Reference Application (IoT Edge Module)
+		 *********************************************************************************/
+		public async Task IoTHubDeployReferenceApp(string deviceId, string manifest)
+		{
+			var deploymentManifest = JsonConvert.DeserializeObject<ConfigurationContent>(manifest);
+			IEnumerable<Module> currentModules;
+
+			currentModules = await _registryManager.GetModulesOnDeviceAsync(deviceId);
+
+			foreach (var module in currentModules)
+			{
+				_logger.LogInformation($"Found IoT Edge Module : {module.Id}");
+
+				if (module.Id.StartsWith("$"))
+				{
+					continue;
+				}
+				else
+				{
+					foreach (var moduleContentKey in deploymentManifest.ModulesContent.Keys)
+					{
+						// Remove existing one.
+						_logger.LogInformation($"Removing Module : {moduleContentKey}");
+						await _registryManager.RemoveModuleAsync(module);
+					}
+				}
+			}
+
+			await _registryManager.ApplyConfigurationContentOnDeviceAsync(deviceId, deploymentManifest);
+		}
+
+		/**********************************************************************************
+		 * Send Command to device
+		 *********************************************************************************/
+		public async Task<string> IoTHubDeviceSendCommand(string deviceId, string commandName, string payLoa)
+		{
 			var methodInvocation = new CloudToDeviceMethod(commandName)
 			{
 				ResponseTimeout = TimeSpan.FromSeconds(30),
@@ -298,14 +535,116 @@ namespace InnovateFPGA2021_WebApp.Helper
 
 		}
 
-		#endregion
+		public async Task<bool> IoTHubApplyConfiguration(string deviceId, string content)
+		{
+			var config = JsonConvert.DeserializeObject<ConfigurationContent>(content);
+			await _registryManager.ApplyConfigurationContentOnDeviceAsync(deviceId, config);
 
-		#region DPS
+			return true;
+		}
 
-		/**********************************************************************************
+        #region TEST
+        public object GetEdgeAgentProperties()
+        {
+			var desiredProperties = new
+			{
+				schemaVersion = "1.0",
+				runtime = new
+				{
+					type = "docker",
+					settings = new
+					{
+						loggingOptions = string.Empty
+					}
+				},
+				systemModules = new
+				{
+					edgeAgent = new
+					{
+						type = "docker",
+						settings = new
+						{
+							image = "mcr.microsoft.com/azureiotedge-agent:1.2",
+							createOptions = string.Empty
+						}
+					},
+					edgeHub = new
+					{
+						type = "docker",
+						status = "running",
+						restartPolicy = "always",
+						settings = new
+						{
+							image = "mcr.microsoft.com/azureiotedge-simulated-temperature-sensor:1.0",
+							createOptions = ""
+						}
+					}
+				},
+				modules = new
+				{ }
+			};
+
+			return desiredProperties;
+		}
+
+		public  object GetEdgeHubProperties()
+        {
+			var desiredProperties = new
+			{
+				schemaVersion = "1.0",
+				routes = new Dictionary<string, string>
+				{
+					["route1"] = "from /* INTO $upstream",
+				},
+				storeAndForwardConfiguration = new
+				{
+					timeToLiveSecs = 7200
+				}
+			};
+			return desiredProperties;
+		}
+		private static object GetModuleConfiguration()
+		{
+			return new
+			{
+				version = "1.0",
+				type = "docker",
+				status = "running",
+				restartPolicy = "always",
+				settings = new
+				{
+					image = "daisukeiot/rfsmodule:1.0.1-arm32v7",
+					//createOption = string.Empty
+					createOptions = "{\"HostConfig\":{\"Privileged\":true,\"Binds\":[\"/lib/firmware:/lib/firmware\",\"/sys/kernel/config:/sys/kernel/config\"]},\"Mounts\":[{\"Type\":\"bind\",\"Source\":\"/lib/firmware\",\"Destination\":\"/lib/firmware\",\"Mode\":\"\",\"RW\":true,\"Propagation\":\"rprivate\"},{\"Type\":\"bind\",\"Source\":\"/sys/kernel/config\",\"Destination\":\"/sys/kernel/config\",\"Mode\":\"\",\"RW\":true,\"Propagation\":\"rprivate\"}]}"
+				}
+			};
+		}
+
+		public object GetModuleConfiguration(string image, string createOption)
+		{
+			return new
+			{
+				version = "1.0",
+				type = "docker",
+				status = "running",
+				restartPolicy = "always",
+				settings = new
+				{
+					image = image,
+					createOptions = createOption
+				}
+			};
+		}
+
+        #endregion // test
+        #endregion
+
+        #region DPS
+
+        /**********************************************************************************
          * Get list of DPS Enrollments
          *********************************************************************************/
-		public async Task<DpsEnrollmentListViewModel> DpsEnrollmentListGet()
+        public async Task<DpsEnrollmentListViewModel> DpsEnrollmentListGet()
 		{
 			var enrollmentList = new DpsEnrollmentListViewModel();
 			QuerySpecification querySpecification;
@@ -602,5 +941,26 @@ namespace InnovateFPGA2021_WebApp.Helper
 			return bDeleted;
 		}
 		#endregion
+	}
+
+	internal static class TwinExtensions
+	{
+		private const string DesiredPropertiesAttribute = "properties.desired";
+
+		public static IDictionary<string, object> GetDesiredPropertiesDictionary(this Twin twin)
+		{
+			if (twin == null)
+			{
+				throw new ArgumentNullException(nameof(twin));
+			}
+
+			var twinDesiredProperties = twin.Properties.Desired;
+			twinDesiredProperties.ClearMetadata();
+
+			var twinDesiredPropertiesDictionary =
+				JsonConvert.DeserializeObject<Dictionary<string, object>>(twinDesiredProperties.ToJson());
+
+			return new Dictionary<string, object> { { DesiredPropertiesAttribute, twinDesiredPropertiesDictionary } };
+		}
 	}
 }

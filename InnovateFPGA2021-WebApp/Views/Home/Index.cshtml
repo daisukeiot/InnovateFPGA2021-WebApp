@@ -42,10 +42,12 @@ Main Page
                 </span>
             </div>
             <div class="modal-body">
-                @*<input type="button" id="btnTestCommand" class="modalButton" value="test" style="float:left;">*@
 
                 <fieldset>
-                    <table style="width: 100%;" class="tableModal">
+                    <div>
+                        <label for="deviceInformationTable"><strong>Device Information</strong></label>
+                    </div>
+                    <table id="deviceInformationTable " style="width: 100%;" class="tableModal">
                         <tr class="modalTr" style="background-color:#E7E9EB">
                             <td>
                                 <div class="modalToolTip">
@@ -70,7 +72,7 @@ Main Page
                         <tr class="modalTr">
                             <td>
                                 <div class="modalToolTip">
-                                    <span class="modalTdIcon glyphicon glyphicon-info-sign"></span>
+                                    <a href="https://docs.microsoft.com/dotnet/api/microsoft.azure.devices.client.connectionstatus?view=azure-dotnet" target="_blank"><span class="modalTdIcon glyphicon glyphicon-info-sign"></span></a>
                                     <span class="tooltiptext">Status of device connection.  Device is either online (Connected) or offline (Disconnected).</span>
                                 </div>
                             </td>
@@ -99,7 +101,7 @@ Main Page
                             </td>
                             <td class="modalTdContents">
                                 <div id="deviceModelId" style="overflow-x: hidden; max-width: 95%; white-space: nowrap;">
-                                     &nbsp;
+                                    &nbsp;
                                 </div>
                             </td>
                             <td>
@@ -175,71 +177,6 @@ Main Page
                     </table>
                 </fieldset>
 
-                <fieldset id="fieldEdgeModule" hidden>
-                    <table style="width:100%;" class="tableModal">
-                        <tr class="modalTr" style="background-color:#E7E9EB">
-                            <td>
-                                <div class="modalToolTip">
-                                    <a href="https://docs.microsoft.com/azure/iot-edge/iot-edge-modules" target="_blank"><span class="modalTdIcon glyphicon glyphicon-info-sign"></span></a>
-                                    <span class="tooltiptext">Module ID of Azure IoT Edge. Click <span class="modalTdIcon glyphicon glyphicon-info-sign"></span> to learn more.</span>
-                                </div>
-                            </td>
-                            <td class="modalTdLabel">
-                                <label class="modalLabel">Module ID</label>
-                            </td>
-                            <td class="modalTdContents">
-                                <div style="width:100%;font-size:1.1em">
-                                    <select id="iotHubModuleList" style="width:80%;padding:3px">
-                                    </select>
-                                </div>
-                            </td>
-                            <td class="modalTdButton">
-                                <button id="btnDeleteModule" class="modalButton" style="visibility:hidden" />
-                            </td>
-                        </tr>
-
-                        <tr class="modalTr">
-                            <td>
-                                <div class="modalToolTip">
-                                    <span class="modalTdIcon glyphicon glyphicon-info-sign"></span>
-                                    <span class="tooltiptext">Status of Azure IoT Edge module.  The Module is either online (Connected) or offline (Disconnected).</span>
-                                </div>
-                            </td>
-                            <td class="modalTdLabel">
-                                <label class="modalLabel">Module State</label>
-                            </td>
-                            <td class="modalTdContents">
-                                <div id="moduleState">
-                                    &nbsp;
-                                </div>
-                            </td>
-                            <td class="modalTdButton">
-                                <button id="btnModuleConnectionRefresh" class="modalButton"><span class="modalTdIcon glyphicon glyphicon-refresh"></span>Refresh</button>
-                            </td>
-                        </tr>
-
-                        <tr class="modalTr" style="background-color:#e7e9eb">
-                            <td>
-                                <div class="modalToolTip">
-                                    <a href="https://docs.microsoft.com/azure/iot-develop/concepts-developer-guide-device?pivots=programming-language-ansi-c#model-id-announcement" target="_blank"><span class="modalTdIcon glyphicon glyphicon-info-sign"></span></a>
-                                    <span class="tooltiptext">IoT Plug and Play Digital Twin Model ID (DTMI).  Click <span class="modalTdIcon glyphicon glyphicon-info-sign"></span> to learn more.</span>
-                                </div>
-                            </td>
-                            <td class="modalTdLabel">
-                                <label class="modalLabel">Module Model ID</label>
-                            </td>
-                            <td class="modalTdContents">
-                                <div id="moduleModelId" style="width:inherit;overflow-x:hidden; white-space:nowrap;">
-                                    &nbsp;
-                                </div>
-                            </td>
-                            <td class="modalTdButton">
-                                <button id="btnDeviceModelIdCopy" class="modalButton" disabled><span class="modalTdIcon glyphicon glyphicon-copy"></span>Copy</button>
-                            </td>
-                        </tr>
-
-                    </table>
-                </fieldset>
                 <fieldset>
                     <table style="width:100%">
                         <tr data-toggle="collapse" data-target="#new-deviceid" class="accordian-toggle" style="width:100%">
@@ -284,9 +221,198 @@ Main Page
                         </tr>
                     </table>
                 </fieldset>
+
+                <fieldset id="fieldEdgeModuleInfo" hidden>
+                    <label for="moduleInfoTable"><strong>IoT Edge Module Information</strong></label>
+                    <table id="moduleInfoTable" style="width:100%;" class="tableModal">
+                        <tr class="modalTr" style="background-color:#E7E9EB">
+                            <td>
+                                <div class="modalToolTip">
+                                    <a href="https://docs.microsoft.com/azure/iot-edge/iot-edge-modules" target="_blank"><span class="modalTdIcon glyphicon glyphicon-info-sign"></span></a>
+                                    <span class="tooltiptext">Module ID of Azure IoT Edge. Click <span class="modalTdIcon glyphicon glyphicon-info-sign"></span> to learn more.</span>
+                                </div>
+                            </td>
+                            <td class="modalTdLabel">
+                                <label class="modalLabel">Module ID</label>
+                            </td>
+                            <td class="modalTdContents">
+                                <div style="width:100%;font-size:1.1em">
+                                    <select id="iotHubModuleList" style="width:80%;padding:3px">
+                                    </select>
+                                </div>
+                            </td>
+                            <td class="modalTdButton">
+                                <button id="btnRemoveModule" class="modalButton" disabled><span class="modalTdIcon glyphicon glyphicon-trash"></span>Remove</button>
+                            </td>
+                        </tr>
+
+                        <tr class="modalTr">
+                            <td>
+                                <div class="modalToolTip">
+                                    <a href="https://devblogs.microsoft.com/iotdev/understand-different-connection-strings-in-azure-iot-hub/#iothubdeviceconn" target="_blank"><span class="modalTdIcon glyphicon glyphicon-info-sign"></span></a>
+                                    <span class="tooltiptext">Status of Azure IoT Edge module.  The Module is either online (Connected) or offline (Disconnected).</span>
+                                </div>
+                            </td>
+                            <td class="modalTdLabel">
+                                <label class="modalLabel">Module State</label>
+                            </td>
+                            <td class="modalTdContents">
+                                <div id="moduleState">
+                                    &nbsp;
+                                </div>
+                            </td>
+                            <td class="modalTdButton">
+                                <button id="btnModuleConnectionRefresh" class="modalButton"><span class="modalTdIcon glyphicon glyphicon-refresh"></span>Refresh</button>
+                            </td>
+                        </tr>
+
+                        <tr class="modalTr" style="background-color:#e7e9eb">
+                            <td>
+                                <div class="modalToolTip">
+                                    <a href="https://docs.microsoft.com/azure/iot-develop/concepts-developer-guide-device?pivots=programming-language-ansi-c#model-id-announcement" target="_blank"><span class="modalTdIcon glyphicon glyphicon-info-sign"></span></a>
+                                    <span class="tooltiptext">IoT Plug and Play Digital Twin Model ID (DTMI).  Click <span class="modalTdIcon glyphicon glyphicon-info-sign"></span> to learn more.</span>
+                                </div>
+                            </td>
+                            <td class="modalTdLabel">
+                                <label class="modalLabel">Module Model ID</label>
+                            </td>
+                            <td class="modalTdContents">
+                                <div id="moduleModelId" style="width:inherit;overflow-x:hidden; white-space:nowrap;">
+                                    &nbsp;
+                                </div>
+                            </td>
+                            <td class="modalTdButton">
+                                <button id="btnModuleModelIdCopy" class="modalButton" disabled><span class="modalTdIcon glyphicon glyphicon-copy"></span>Copy</button>
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
+
+                <fieldset id="fieldEdgeModuleDeploy" hidden>
+                    <label for="moduleInfoTable"><strong>IoT Edge Module Management</strong></label>
+                    <table id="moduleDeployTable" style="width:100%;" class="tableModal">
+                        <tr class="modalTr" style="background-color:#E7E9EB">
+                            <td>
+                                <div class="modalToolTip">
+                                    @*TBD : Change link to reference app*@
+                                    <a href="https://docs.microsoft.com/azure/iot-hub/iot-hub-devguide-device-twins" target="_blank"><span class="modalTdIcon glyphicon glyphicon-info-sign"></span></a>
+                                    <span class="tooltiptext">Deploy Reference Application. Click <span class="modalTdIcon glyphicon glyphicon-info-sign"></span> to learn more.</span>
+                                </div>
+                            </td>
+                            <td class="modalTdLabel">
+                                <label class="modalLabel">Deploy Reference Application</label>
+                            </td>
+                            <td class="modalTdContents">
+                                <div id="deviceTwinNoContent" style="overflow-x: hidden;max-width:95%">
+                                    &nbsp;
+                                </div>
+                            </td>
+                            <td>
+                                <button id="btnIoTEdgeDeployReferenceApp" class="modalButton"><span class="modalTdIcon glyphicon glyphicon-cloud-download"></span>Deploy</button>
+                            </td>
+                        </tr>
+
+                        <tr class="modalTr">
+                            <td>
+                                <div class="modalToolTip">
+                                    <a href="https://docs.microsoft.com/azure/iot-edge/module-composition?view=iotedge-2020-11" target="_blank"><span class="modalTdIcon glyphicon glyphicon-info-sign"></span></a>
+                                    <span class="tooltiptext">Deploy with Deployment Manifest. Click <span class="modalTdIcon glyphicon glyphicon-info-sign"></span> to learn more.</span>
+                                </div>
+                            </td>
+                            <td class="modalTdLabel">
+                                <label class="modalLabel">Deploy with Deployment Manifest</label>
+                            </td>
+                            <td class="modalTdContents">
+                                <div id="deviceTwinNoContent" style="overflow-x: hidden;max-width:95%">
+                                    &nbsp;
+                                </div>
+                            </td>
+                            <td>
+                                <button id="btnIoTEdgeDeployManifest" class="modalButton" data-toggle="modal" data-target="#modal-iotedge-deploy"><span class="modalTdIcon glyphicon glyphicon-cloud-download"></span>Deploy</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <fieldset>
+                                    <table style="width:100%">
+                                        <tr data-toggle="collapse" data-target="#new-iotEdgeModule" class="accordian-toggle" style="width:100%">
+                                            <td style="text-align:center">
+                                                <button id="btnIoTHubNewDevice" class="modalButton" style="width:100%">
+                                                    <span class="modalTdIcon glyphicon glyphicon-chevron-down"></span>
+                                                    Add New IoT Edge Module
+                                                    <span class="modalTdIcon glyphicon glyphicon-chevron-down"></span>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr class="hiddenRow collapse" id="new-iotEdgeModule" style="margin-top:1em">
+                                            <td style="white-space:nowrap">
+                                                <div class="accordian-body" style="margin-top:1em">
+                                                    <table width="100%">
+                                                        <tr class="modalTr" style="background-color:#E7E9EB">
+                                                            <td class="modalTdAddLabel">
+                                                                Module ID
+                                                            </td>
+                                                            <td style="width:99%">
+                                                                <input type="text" id="newModuleId" style="width: 80%" />
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="modalTr">
+                                                            <td class="modalTdAddLabel">
+                                                                Image Path
+                                                            </td>
+                                                            <td style="width:99%">
+                                                                <input type="text" id="moduleImagePath" style="width: 80%" />
+                                                            </td>
+                                                        </tr>
+                                                        <tr class="modalTr" style="background-color:#E7E9EB">
+                                                            <td class="modalTdAddLabel">
+                                                                Create Option
+                                                            </td>
+                                                            <td style="width:99%">
+                                                                <input type="text" id="moduleCreateOption" style="width: 80%" />
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                                <button id="btnAddModule" class="modalButton" disabled>Create</button>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </fieldset>
+                            </td>
+                        </tr>
+
+                    </table>
+                </fieldset>
             </div>
             <div class="modal-footer modalFooter">
                 <input type="button" class="modalButton" data-dismiss="modal" value="Close">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-iotedge-deploy" tabindex="-2" role="dialog">
+    <div class="modal-dialog modal-xl modal-dialog-centered" style="width:90%">
+        <div class="modal-content modalContent">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <span class="modal-title modalTitle">
+                    <img src="./images/IoTHub.png" style="width:1.3em; margin-right:0.5em; vertical-align:text-top" />Azure IoT Hub
+                </span>
+            </div>
+            <div class="modal-body">
+                @*<input type="button" id="btnTestCommand" class="modalButton" value="test" style="float:left;">*@
+                <fieldset style="width:100%">
+                    @*@Html.TextArea("DeploymentManifest", new { @class = "myTextArea", id = "txtDeploymentManifest", Value = ViewData["DeploymentManifestEmpty"] })*@
+                    <textarea id="txtDeploymentManifest" placeholder="Deployment Manifest" class="myTextArea" oninput="auto_height(this)">@ViewData["DeploymentManifestEmpty"].ToString().Trim()</textarea>
+                </fieldset>
+            </div>
+            <div class="modal-footer modalFooter">
+                <button type="button" class="modalButton" style="float:none" id="btnDeployModule">Deploy</button>
+                <button type="button" class="modalButton" style="float:none" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -305,7 +431,7 @@ Main Page
             </div>
             <div class="modal-body">
                 <fieldset>
-                    <table style="width:100%;" class="tableModal" >
+                    <table style="width:100%;" class="tableModal">
                         <tr class="modalTr" style="background-color:#E7E9EB">
                             <td>
                                 <div class="modalToolTip">
@@ -323,7 +449,7 @@ Main Page
                                 </div>
                             </td>
                             <td>
-                                <button id="btnDpsEnrollmentDelete" class="modalButton"  disabled><span class="modalTdIcon glyphicon glyphicon-trash"></span>Delete</button>
+                                <button id="btnDpsEnrollmentDelete" class="modalButton" disabled><span class="modalTdIcon glyphicon glyphicon-trash"></span>Delete</button>
                             </td>
                         </tr>
 
@@ -363,7 +489,7 @@ Main Page
                                 </div>
                             </td>
                             <td>
-                                <button id="btnDpsIdScopeCopy" class="modalButton"  disabled><span class="modalTdIcon glyphicon glyphicon-copy"></span>Copy</button>
+                                <button id="btnDpsIdScopeCopy" class="modalButton" disabled><span class="modalTdIcon glyphicon glyphicon-copy"></span>Copy</button>
                             </td>
                         </tr>
 
@@ -384,7 +510,7 @@ Main Page
                                 </div>
                             </td>
                             <td>
-                                <button id="btnDpsKeyCopy" class="modalButton"  disabled><span class="modalTdIcon glyphicon glyphicon-copy"></span>Copy</button>
+                                <button id="btnDpsKeyCopy" class="modalButton" disabled><span class="modalTdIcon glyphicon glyphicon-copy"></span>Copy</button>
                             </td>
                         </tr>
                     </table>
@@ -450,7 +576,7 @@ Main Page
 
                                     </table>
                                 </div>
-                                <button id="btnDpsNewEnrollmentCreate" class="modalButton"  disabled>Create</button>
+                                <button id="btnDpsNewEnrollmentCreate" class="modalButton" disabled>Create</button>
                             </td>
                         </tr>
                     </table>
@@ -654,16 +780,31 @@ Script block to update Telemetry/Events grid
                 var moduleId = selectedItem.text().trim();
 
                 if (moduleId.length == 0) {
-                    IoTHubModalClear();
+                    DisableButton($('#btnRemoveModule'), true);
+                    IoTHubModalModuleClear();
                     return;
                 }
                 console.log("module selected " + moduleId);
 
                 $('#moduleState').html(selectedItem.attr('data-Status'))
                 $('#moduleModelId').html(selectedItem.attr('data-ModelId'))
+
+                if (selectedItem.attr('data-ModelId') == "No Model ID") {
+                    DisableButton($('#btnModuleModelIdCopy'), true);
+                }
+                else {
+                    DisableButton($('#btnModuleModelIdCopy'), false);
+                }
+
+                if (moduleId == '$edgeAgent' || moduleId == '$edgeHub') {
+                    DisableButton($('#btnRemoveModule'), true);
+                }
+                else {
+                    DisableButton($('#btnRemoveModule'), false);
+                }
             }
             else {
-                IoTHubModalClear();
+                IoTHubModalModuleClear();
             }
         });
 
@@ -680,6 +821,20 @@ Script block to update Telemetry/Events grid
             else {
                 $('#newDeviceId').val("");
                 DisableButton($('#btnNewDeviceIdCreate'), true);
+            }
+        });
+
+        //
+        // User entered new module id
+        //
+        $('#newModuleId').change(function (e) {
+            var newDevice = $('#newModuleId').val().trim();
+            if (newDevice.length > 0) {
+                DisableButton($('#btnAddModule'), false);
+            }
+            else {
+                $('#newDeviceId').val("");
+                DisableButton($('#btnAddModule'), true);
             }
         });
 
@@ -730,7 +885,6 @@ Script block to update Telemetry/Events grid
         // Modal Dialog
         $('#btnModalIoTHubShow').click(function (e) {
             console.log("Button " + e.target.id + " Click");
-            //IoTHubModalClear();
             IoTHubDeviceListGet(null);
         });
 
@@ -780,24 +934,29 @@ Script block to update Telemetry/Events grid
 
         $('#btnModuleConnectionRefresh').click(function (e) {
             console.log("Button " + e.target.id + " Click");
-            var selectedItem = $('#iotHubModuleList option:selected')
+            var selectedDevice = $('#iotHubDeviceList option:selected')
+            var selectedModule = $('#iotHubModuleList option:selected')
 
-            if (selectedItem != null) {
-                var moduleId = selectedItem.text().trim();
+            if (selectedDevice != null) {
+                var deviceId = selectedDevice.text().trim();
 
-                if (moduleId.length == 0) {
-                    IoTHubModalClear();
-                    return;
-                }
-                console.log("module selected " + moduleId);
+                console.log("module selected " + deviceId);
 
-                $('#moduleState').html(selectedItem.attr('data-Status'))
-                $('#moduleModelId').html(selectedItem.attr('data-ModelId'))
+                IoTHubModuleListGet(deviceId, selectedModule.text().trim());
+
+                $('#moduleState').html(selectedModule.attr('data-Status'))
+                $('#moduleModelId').html(selectedModule.attr('data-ModelId'))
             }
             else {
-                IoTHubModalClear();
+                //IoTHubModalClear();
             }
         });
+
+        $('#btnModuleModelIdCopy').click(function (e) {
+            console.log("Button " + e.target.id + " Click");
+            navigator.clipboard.writeText($('#moduleModelId').html().trim());
+        });
+
 
         $('#btnDeviceTwin').click(function (e) {
             console.log("Button " + e.target.id + " Click");
@@ -838,6 +997,58 @@ Script block to update Telemetry/Events grid
                 var isEdge = $('#newDeviceEdge').is(':checked');
                 console.log("Adding Device " + newDeviceId);
                 IoTHubDeviceCreate(newDeviceId, isEdge);
+            }
+        });
+
+        // deploy iot edge deployment manifest
+        $('#btnDeployModule').click(function (e) {
+            console.log("Button " + e.target.id + " Click");
+            var selectedItem = $('#iotHubDeviceList option:selected');
+
+            if (selectedItem != null) {
+
+                var deviceId = selectedItem.text().trim();
+                var deploymentManifest = $('#txtDeploymentManifest').val().trim();
+                IoTHubDeployManifest(deviceId, deploymentManifest);
+            }
+        });
+
+        // deploy reference application
+        $('#btnIoTEdgeDeployReferenceApp').click(function (e) {
+            console.log("Button " + e.target.id + " Click");
+            var selectedItem = $('#iotHubDeviceList option:selected');
+
+            if (selectedItem != null) {
+                var deviceId = selectedItem.text().trim();
+                IoTHubDeployReferenceApp(deviceId);
+            }
+        });
+
+        // add iot edge module
+        $('#btnAddModule').click(function (e) {
+            console.log("Button " + e.target.id + " Click");
+            var selectedDevice = $('#iotHubDeviceList option:selected');
+            var moduleId = $('#newModuleId').val().trim();
+            var image = $('#moduleImagePath').val().trim();
+            var createOption = $('#moduleCreateOption').val().trim();
+
+            if (selectedDevice != null && moduleId != null) {
+                var deviceId = selectedDevice.text().trim();
+                IoTHubAddModule(deviceId, moduleId, image, createOption);
+            }
+        });
+
+        // remove iot edge module
+        $('#btnRemoveModule').click(function (e) {
+            console.log("Button " + e.target.id + " Click");
+            var selectedDevice = $('#iotHubDeviceList option:selected');
+            var selectedModule = $('#iotHubModuleList option:selected');
+
+            if (selectedDevice != null && selectedModule != null) {
+
+                var deviceId = selectedDevice.text().trim();
+                var moduleId = selectedModule.text().trim();
+                IoTHubRemoveModule(deviceId, moduleId);
             }
         });
 
@@ -891,6 +1102,7 @@ Script block to update Telemetry/Events grid
             $('#modal-dps').on('hidden.bs.modal', function () {
                 DpsModalClear();
                 $("#new-enrollment").collapse('hide');
+                $('#dpsEnrollmentList')[0].selectedIndex = 0;
             });
 
             $("#modal-iothub").on('show.bs.modal', function () {
@@ -900,7 +1112,11 @@ Script block to update Telemetry/Events grid
             $("#modal-iothub").on('hidden.bs.modal', function () {
                 IoTHubModalClear();
                 $("#new-deviceid").collapse('hide');
-                $('#fieldEdgeModule').hide();
+                $("#new-iotEdgeModule").collapse('hide');
+                $('#fieldEdgeModuleInfo').hide();
+                $('#fieldEdgeModuleDeploy').hide();
+                $('#iotHubDeviceList')[0].selectedIndex = 0;
+                $('#iotHubModuleList')[0].selectedIndex = 0;
             });
 
         });
