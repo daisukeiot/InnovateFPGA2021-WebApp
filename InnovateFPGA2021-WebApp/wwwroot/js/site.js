@@ -19,43 +19,96 @@ function toggleEvent(item) {
     }
 }
 
+// Reset IoT Hub Moal to inital state
+function IoTHubModalReset() {
+    $('#iotHubDeviceList')[0].selectedIndex = 0;
+    IoTHubModalClear();
+    IoTHubModalNewDeviceIdReset();
+    IoTHubModalModuleInfoReset();
+    IoTHubModalModuleMgmtReset();
+    IoTHubModuleEnable();
+}
+
+// Clears IoT Hub Modal basic info (Top part)
 function IoTHubModalClear() {
     $('#deviceConnectionState').html("");
     $('#deviceModelId').html("");
     $('#deviceConnectionString').html("");
     $('#deviceKey').html("");
-    $('#newDeviceId').val("");
     $('#DeviceTwinContent').html("");
     $('#DeviceTwinContent-Row').toggle(false);
+}
 
-    IoTHubModalModuleClear();
-    DisableButton($('#btnDeleteDevice'), true);
-    DisableButton($('#btnDeviceModelIdCopy'), true);
-    DisableButton($('#btnDeviceConnectionStringCopy'), true);
-    DisableButton($('#btnDeviceKeyCopy'), true);
-    DisableButton($('#btnDeviceTwin'), true);
-    $('#btnDeviceTwin').val("Show");
+// Reset IoT Hub Modal New Device UI
+function IoTHubModalNewDeviceIdReset() {
+    $("#new-deviceid").collapse('hide');
+    IoTHubModalNewDeviceIdClear();
+}
+
+// Clears IoT Hub Modal New Device values
+function IoTHubModalNewDeviceIdClear() {
+    $('#newDeviceId').val("");
+    $('#newDeviceEdge').prop('checked', false);
+    DisableButton($('#btnNewDeviceIdCreate'), true);
+}
+
+// Reset IoT Hub Modal Module Info UI 
+function IoTHubModalModuleInfoReset() {
+    $('#iotHubModuleList')[0].selectedIndex = 0;
+    IoTHubModalModuleInfoClear(false);
+    DisableButton($('#btnRemoveModule'), true);
+    DisableButton($('#btnModuleModelIdCopy'), true);
+    IoTHubModalModuleInfoClear();
+}
+
+// Clears IoT Hub Modal Module Info values
+function IoTHubModalModuleInfoClear() {
+    $('#moduleState').html("");
+    $('#moduleModelId').html("");
+}
+
+// Clears IoT Hub Modal Module Management part
+function IoTHubModalModuleMgmtReset() {
+    $("#new-iotEdgeModule").collapse('hide');
+    DisableButton($('#btnAddModule'), true);
+    IoTHubModalModuleMgmtClear();
+}
+
+function IoTHubModalModuleMgmtClear() {
+    $('#newModuleId').val("");
+    $('#moduleImagePath').val("");
+    $('#moduleCreateOption').val("");
+}
+
+// Reset DPS Modal to initial state
+function DpsModalReset() {
+    DpsModalNewEnrollmentReset();
+    DpsModalClear();
+    DisableButton($('#btnDpsNewEnrollmentCreate'), true);
 }
 
 function DpsModalClear() {
     $('#dpsEnrollmentType').html("");
     $('#dpsKey').html("");
-    $('#dpsNewEnrollmentName').val("");
 }
 
-function IoTHubModalModuleClear() {
-    $('#moduleState').html("");
-    $('#moduleModelId').html("");
-    $('#newModuleId').val("");
-    $('#moduleImagePath').val("");
-    $('#moduleCreateOption').val("");
-    DisableButton($('#btnRemoveModule'), true);
+function DpsModalNewEnrollmentReset() {
+    $('#new-enrollment').collapse('hide');
+    DpsModalNewEnrollmentClear();
+}
+
+function DpsModalNewEnrollmentClear() {
+    $('#dpsNewEnrollmentName').val("");
+    $('#radioDpsIndividual').prop('checked', true);
+    $('#newDpsEdge').prop('checked', false);
+    DisableButton($('#btnDpsNewEnrollmentCreate'), true);
 }
 
 function IoTHubModuleEnable(bEnable) {
 
     if (bEnable) {
-        IoTHubModalModuleClear();
+        IoTHubModalModuleInfoClear();
+        IoTHubModalModuleMgmtClear();
         $('#fieldEdgeModuleInfo').show();
         $('#fieldEdgeModuleDeploy').show();
     }
@@ -79,7 +132,6 @@ var IoTHubDeviceListGet = function (selectValue) {
             $('#iotHubDeviceList').empty();
             $('#iotHubDeviceList').append(response);
             if (selectValue != null) {
-//                $(`#iotHubDeviceList option[value='${selectValue}']`).prop('selected', true);
                 $('#iotHubDeviceList').val(selectValue).change();
             }
         },
@@ -238,6 +290,8 @@ var IoTHubDeviceCreate = function (deviceId, isEdge) {
         success: function () {
             //debugger
             IoTHubModalClear();
+            IoTHubModalNewDeviceIdClear();
+
             IoTHubDeviceListGet(deviceId);
         //    $(`#iotHubDeviceList option[value='${deviceId}']`).prop('selected', true);
         //    $('#iotHubDeviceList').val(deviceId).change();
@@ -259,7 +313,6 @@ var IoTHubDeployManifest = function (deviceId, deploymentManifest) {
         url: '/home/IoTHubDeployManifest',
         data: { deviceId: deviceId, deploymentManifest: deploymentManifest },
         success: function () {
-            //debugger
             IoTHubModuleListGet(deviceId, null);
         },
         error: function (jqXHR) {
@@ -280,7 +333,7 @@ var IoTHubAddModule = function (deviceId, moduleId, image, createOption) {
         data: { deviceId: deviceId, moduleId: moduleId, image :image, createOption: createOption},
         success: function () {
             //debugger
-            IoTHubModuleListGet(deviceId, null);
+            IoTHubModuleListGet(deviceId, moduleId);
         },
         error: function (jqXHR) {
             alert(" Status: " + jqXHR.status + " " + jqXHR.responseText);
@@ -300,9 +353,8 @@ var IoTHubRemoveModule = function (deviceId, moduleId) {
         data: { deviceId: deviceId, moduleId: moduleId },
         success: function () {
             //debugger
+            IoTHubModalModuleInfoClear();
             IoTHubModuleListGet(deviceId, null);
-            $('#moduleState').html("&nbsp;")
-            $('#moduleModelId').html("&nbsp;")
         },
         error: function (jqXHR) {
             alert(" Status: " + jqXHR.status + " " + jqXHR.responseText);
@@ -434,6 +486,7 @@ var DpsEnrollmentCreate = function (enrollmentName, isGroup, isEdge) {
             $("#dpsEnrollmentList").empty();
             $("#dpsEnrollmentList").append(response);
             $('#dpsEnrollmentList').val(enrollmentName).change();
+            DpsModalNewEnrollmentClear();
             return true;
         },
         error: function (jqXHR) {

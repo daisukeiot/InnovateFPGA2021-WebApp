@@ -553,9 +553,7 @@ Main Page
                                                         <input type="radio" id="radioDpsGroup" name="newEnrollmentTypeRadio" value="group">
                                                         <label class="modalLabel" for="radioDpsGroup">Group</label>
                                                     </div>
-
                                                 </div>
-
                                             </td>
                                         </tr>
                                         <tr class="modalTr" style="background-color:#E7E9EB">
@@ -743,10 +741,9 @@ Script block to update Telemetry/Events grid
         //
         $('#iotHubDeviceList').change(function (e) {
             var selectedItem = $('#iotHubDeviceList option:selected')
+            var deviceId = selectedItem.text().trim();
 
-            if (selectedItem != null) {
-                var deviceId = selectedItem.text().trim();
-
+            if (deviceId.length > 0) {
                 IoTHubModalClear();
 
                 if (deviceId.length == 0) {
@@ -756,6 +753,7 @@ Script block to update Telemetry/Events grid
                 IoTHubGetDeviceInfo(deviceId, "@ViewData["IoTHubName"]");
 
                 if (selectedItem.attr('data-isEdge') == "True") {
+                    IoTHubModalModuleInfoReset();
                     IoTHubModuleEnable(true);
                     IoTHubModuleListGet(deviceId, null);
                 }
@@ -766,6 +764,7 @@ Script block to update Telemetry/Events grid
                 DisableButton($('#btnDeleteDevice'), false);
             }
             else {
+                IoTHubModuleEnable(false);
                 DisableButton($('#btnDeleteDevice'), true);
             }
         });
@@ -781,7 +780,7 @@ Script block to update Telemetry/Events grid
 
                 if (moduleId.length == 0) {
                     DisableButton($('#btnRemoveModule'), true);
-                    IoTHubModalModuleClear();
+                    IoTHubModalModuleInfoClear();
                     return;
                 }
                 console.log("module selected " + moduleId);
@@ -804,7 +803,7 @@ Script block to update Telemetry/Events grid
                 }
             }
             else {
-                IoTHubModalModuleClear();
+                IoTHubModalModuleInfoClear();
             }
         });
 
@@ -1093,6 +1092,7 @@ Script block to update Telemetry/Events grid
             console.log("Ready");
 
             $('#modal-dps').on('show.bs.modal', function () {
+                DpsModalReset();
                 console.log("Debug : Show DPS Modal");
                 if ($('#dpsIdScope').html().length > 0) {
                     DisableButton($('#btnDpsIdScopeCopy'), false);
@@ -1100,27 +1100,18 @@ Script block to update Telemetry/Events grid
             });
 
             $('#modal-dps').on('hidden.bs.modal', function () {
-                DpsModalClear();
-                $("#new-enrollment").collapse('hide');
-                $('#dpsEnrollmentList')[0].selectedIndex = 0;
+                DpsModalReset();
             });
 
             $("#modal-iothub").on('show.bs.modal', function () {
+                IoTHubModalReset();
                 console.log("Debug : Show IoT Hub Modal");
             });
 
             $("#modal-iothub").on('hidden.bs.modal', function () {
-                IoTHubModalClear();
-                $("#new-deviceid").collapse('hide');
-                $("#new-iotEdgeModule").collapse('hide');
-                $('#fieldEdgeModuleInfo').hide();
-                $('#fieldEdgeModuleDeploy').hide();
-                $('#iotHubDeviceList')[0].selectedIndex = 0;
-                $('#iotHubModuleList')[0].selectedIndex = 0;
-            });
-
+                IoTHubModalReset();
+            });            
         });
-
 
         $('#btnTestCommand').click(function (e) {
             console.log("Button " + e.target.id + " Click");
