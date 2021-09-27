@@ -215,8 +215,10 @@ Main Page
                                             </td>
                                         </tr>
                                     </table>
+                                    <div style="padding-top: 5px;">
+                                        <button id="btnNewDeviceIdCreate" class="modalButton" disabled>Create</button>
+                                    </div>
                                 </div>
-                                <button id="btnNewDeviceIdCreate" class="modalButton" disabled>Create</button>
                             </td>
                         </tr>
                     </table>
@@ -570,11 +572,11 @@ Main Page
                                                 </label>
                                             </td>
                                         </tr>
-
-
                                     </table>
+                                    <div style="padding-top: 5px;">
+                                        <button id="btnDpsNewEnrollmentCreate" class="modalButton" disabled>Create</button>
+                                    </div>
                                 </div>
-                                <button id="btnDpsNewEnrollmentCreate" class="modalButton" disabled>Create</button>
                             </td>
                         </tr>
                     </table>
@@ -986,7 +988,6 @@ Script block to update Telemetry/Events grid
             }
 
             e.target.value = buttonValue;
-
         });
 
         $('#btnNewDeviceIdCreate').click(function (e) {
@@ -1005,7 +1006,6 @@ Script block to update Telemetry/Events grid
             var selectedItem = $('#iotHubDeviceList option:selected');
 
             if (selectedItem != null) {
-
                 var deviceId = selectedItem.text().trim();
                 var deploymentManifest = $('#txtDeploymentManifest').val().trim();
                 IoTHubDeployManifest(deviceId, deploymentManifest);
